@@ -1,0 +1,126 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  JDK_VERSION = "1.5";
+}
+PARSER_BEGIN(RequirementResultValues)
+package bi.controller.brparser.requirementsresultparser;
+
+import java.util.Vector;
+
+import model.ExpectedResult;
+import model.Requirement;
+
+public class RequirementResultValues {
+  private static Vector<Requirement> requirements= new Vector<Requirement>();
+  private static Vector<ExpectedResult> results= new Vector<ExpectedResult>();
+  
+  public Vector<Requirement> getRequirements(){
+  	if(requirements.size()<=0)
+  		return null;
+  	else
+  	 return requirements;
+  }
+  
+    public Vector<ExpectedResult> getResults(){
+  	if(results.size()<=0)
+  		return null;
+  	else
+  	 return results;
+  }
+}
+PARSER_END(RequirementResultValues)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n" 
+| "\r"
+
+}
+TOKEN :
+{
+	<COMA:",">
+|	
+	< VALUE:"\""(~["\""])+"\"">
+|	
+	< EQUAL:"=">
+|
+	<STRING:(~["=","\"",","])+>
+}
+
+void start():
+{
+}
+{
+	{
+		requirements= new Vector<Requirement>();
+ 		results= new Vector<ExpectedResult>();
+		
+	}
+	(requirementValues() | resultValues())
+	<EOF>
+}
+
+void requirementValues():
+{Token t;}
+{
+	t=<VALUE>
+	{
+		String values= t.image;
+			values=values.substring(1,values.length()-1);
+			values=values.trim();
+			values=values.replaceAll("[ \t]*\n+[ \t]*","\n");
+		requirements.addElement(new Requirement(values, null));
+	}
+	(requirementValue())*
+}
+void requirementValue():
+{Token t;}
+{
+	<COMA> t=<VALUE>
+	{
+		String values= t.image;
+			values=values.substring(1,values.length()-1);
+			values=values.trim();
+			values=values.replaceAll("[ \t]*\n+[ \t]*","\n");
+		requirements.addElement(new Requirement(values, null));
+	}
+}
+
+void resultValues():
+{Token t, t1;}
+{
+	t=<STRING><EQUAL>t1=<VALUE>
+	{
+		ExpectedResult er=new ExpectedResult();
+		er.setName(t.image);
+		String values= t1.image;
+			values=values.substring(1,values.length()-1);
+			values=values.trim();
+			values=values.replaceAll("[ \t]*\n+[ \t]*","\n");
+		er.setValue(values);
+		results.addElement(er);
+	}
+	
+	(resultValue())*
+}
+
+void resultValue():
+{Token t, t1;}
+{
+	<COMA> t=<STRING><EQUAL>t1=<VALUE>
+	{
+		ExpectedResult er=new ExpectedResult();
+		er.setName(t.image);
+		String values= t1.image;
+			values=values.substring(1,values.length()-1);
+			values=values.trim();
+			values=values.replaceAll("[ \t]*\n+[ \t]*","\n");
+		er.setValue(values);
+		results.addElement(er);
+	}
+}

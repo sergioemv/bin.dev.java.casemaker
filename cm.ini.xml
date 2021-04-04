@@ -1,0 +1,323 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- jsx.org, (c) -->
+<jsx major='1' minor='1' format='JSX.DataReader'>
+ <object id='i0' class='model.Session2' superclasses=''>
+  <declaredClass class='model.Session2'>
+   <default>
+    <object field='m_TimeStamp' id='i1' class='java.util.Date' superclasses=''>
+     <declaredClass class='java.util.Date'>
+      <primitive type='long' value='1220793976966'/>
+     </declaredClass>
+    </object>
+    <collection field='m_Workspaces' id='i2' class='java.util.Vector'>
+     <object id='i3' class='model.Workspace2' superclasses=''>
+      <declaredClass class='model.Workspace2'>
+       <default>
+        <object field='m_TimeStamp' id='i4' class='java.util.Date' superclasses=''>
+         <declaredClass class='java.util.Date'>
+          <primitive type='long' value='1220793985364'/>
+         </declaredClass>
+        </object>
+        <string field='m_Description' id='i5' value='Default Workspac'/>
+        <reference field='m_Session' idref='i0'/>
+        <collection field='m_ProjectReferences' id='i6' class='java.util.Vector'>
+         <object id='i7' class='model.ProjectReference' superclasses=''>
+          <declaredClass class='model.ProjectReference'>
+           <default>
+            <string field='m_FileName' id='i8' value='nuevo.cpr.xml'/>
+            <string field='m_Path' id='i9' value='/home/smoreno/tmp/nuevo'/>
+            <reference field='m_Workspace' idref='i3'/>
+            <object field='m_TimeStamp' id='i10' class='java.util.Date' superclasses=''>
+             <declaredClass class='java.util.Date'>
+              <primitive type='long' value='1220794112975'/>
+             </declaredClass>
+            </object>
+            <string field='m_LocalFilePath' id='i11' value=''/>
+           </default>
+          </declaredClass>
+         </object>
+        </collection>
+        <string field='m_Name' id='i12' value='56556'/>
+       </default>
+      </declaredClass>
+     </object>
+     <object id='i13' class='model.Workspace2' superclasses=''>
+      <declaredClass class='model.Workspace2'>
+       <default>
+        <object field='m_TimeStamp' id='i14' class='java.util.Date' superclasses=''>
+         <declaredClass class='java.util.Date'>
+          <primitive type='long' value='1617507282821'/>
+         </declaredClass>
+        </object>
+        <string field='m_Description' id='i15' value=''/>
+        <reference field='m_Session' idref='i0'/>
+        <collection field='m_ProjectReferences' id='i16' class='java.util.Vector'/>
+        <string field='m_Name' id='i17' value='Workspace Untitled1'/>
+       </default>
+      </declaredClass>
+     </object>
+    </collection>
+    <string field='m_Version' id='i18' value='2.5'/>
+    <string field='m_User' id='i19' value='sergi'/>
+    <object field='m_ApplicationSetting' id='i20' class='model.ApplicationSetting' superclasses=''>
+     <declaredClass class='model.ApplicationSetting'>
+      <default>
+       <string field='m_UILookAndFeel' id='i21' value='WindowsLookAndFeel'/>
+       <reference field='m_Version' idref='i18'/>
+       <object field='m_TimeStamp' id='i22' class='java.util.Date' superclasses=''>
+        <declaredClass class='java.util.Date'>
+         <primitive type='long' value='1220793976967'/>
+        </declaredClass>
+       </object>
+       <object field='m_ToolVendor' id='i23' class='model.ToolVendor' superclasses=''>
+        <declaredClass class='model.ToolVendor'>
+         <default>
+          <primitive field='id' type='int' value='-1'/>
+          <string field='m_Name' id='i24' value=' '/>
+          <reference field='m_FilePath' idref='i24'/>
+          <collection field='m_Technologies' id='i25' class='java.util.Vector'/>
+          <null field='m_Technology'/>
+          <reference field='m_Version' idref='i18'/>
+          <object field='m_TimeStamp' id='i26' class='java.util.Date' superclasses=''>
+           <declaredClass class='java.util.Date'>
+            <primitive type='long' value='1220793976967'/>
+           </declaredClass>
+          </object>
+         </default>
+        </declaredClass>
+       </object>
+       <null field='m_ExternalXSLTReportFormat'/>
+       <collection field='m_TestCaseReports' id='i27' class='java.util.Vector'>
+        <object id='i28' class='model.TestCaseExternalReports' superclasses=''>
+         <declaredClass class='model.TestCaseExternalReports'>
+          <default>
+           <string field='name' id='i29' value='REPORT_TESTCASE_LIST_ORDERED_BY_NUMBER'/>
+           <string field='filePath' id='i30' value='/media/DATA/work/CM27Dorma/cm/cm/res/TestCaseReports/TestCaseList1.xsl'/>
+           <string field='extension' id='i31' value='html'/>
+           <primitive field='reportDataSourceId' type='int' value='0'/>
+           <string field='defaultApp' id='i32' value='internet browser'/>
+           <primitive field='protectedReport' type='boolean' value='true'/>
+           <primitive field='defaultReport' type='boolean' value='false'/>
+           <string field='reportDataSourceName' id='i33' value='REPORTDS_TESTCASE_LIST_1'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i34' class='model.TestCaseExternalReports' superclasses=''>
+         <declaredClass class='model.TestCaseExternalReports'>
+          <default>
+           <string field='name' id='i35' value='REPORT_TESTCASE_LIST_ORDERED_BY_RISK_LEVELS'/>
+           <string field='filePath' id='i36' value='/media/DATA/work/CM27Dorma/cm/cm/res/TestCaseReports/TestCaseList2.xsl'/>
+           <reference field='extension' idref='i31'/>
+           <primitive field='reportDataSourceId' type='int' value='0'/>
+           <reference field='defaultApp' idref='i32'/>
+           <primitive field='protectedReport' type='boolean' value='true'/>
+           <primitive field='defaultReport' type='boolean' value='false'/>
+           <reference field='reportDataSourceName' idref='i33'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i37' class='model.TestCaseExternalReports' superclasses=''>
+         <declaredClass class='model.TestCaseExternalReports'>
+          <default>
+           <string field='name' id='i38' value='REPORT_ERROR_LIST'/>
+           <string field='filePath' id='i39' value='/media/DATA/work/CM27Dorma/cm/cm/res/TestCaseReports/ErrorList1.xsl'/>
+           <reference field='extension' idref='i31'/>
+           <primitive field='reportDataSourceId' type='int' value='0'/>
+           <reference field='defaultApp' idref='i32'/>
+           <primitive field='protectedReport' type='boolean' value='true'/>
+           <primitive field='defaultReport' type='boolean' value='false'/>
+           <string field='reportDataSourceName' id='i40' value='REPORTDS_ERROR_LIST_1'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i41' class='model.TestCaseExternalReports' superclasses=''>
+         <declaredClass class='model.TestCaseExternalReports'>
+          <default>
+           <string field='name' id='i42' value='REPORT_TESTCASE_LIST_EXCEL_1'/>
+           <string field='filePath' id='i43' value='/media/DATA/work/CM27Dorma/cm/cm/res/TestCaseReports/TestCaseList1Excel.xsl'/>
+           <string field='extension' id='i44' value='xls'/>
+           <primitive field='reportDataSourceId' type='int' value='0'/>
+           <string field='defaultApp' id='i45' value='chart application'/>
+           <primitive field='protectedReport' type='boolean' value='true'/>
+           <primitive field='defaultReport' type='boolean' value='false'/>
+           <string field='reportDataSourceName' id='i46' value='REPORTDS_TESTCASE_LIST_2'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i47' class='model.TestCaseExternalReports' superclasses=''>
+         <declaredClass class='model.TestCaseExternalReports'>
+          <default>
+           <string field='name' id='i48' value='REPORT_TESTCASE_LIST_WORFLOW'/>
+           <string field='filePath' id='i49' value='/media/DATA/work/CM27Dorma/cm/cm/res/TestCaseReports/TestCaseList2Workflow.xsl'/>
+           <reference field='extension' idref='i31'/>
+           <primitive field='reportDataSourceId' type='int' value='0'/>
+           <reference field='defaultApp' idref='i32'/>
+           <primitive field='protectedReport' type='boolean' value='true'/>
+           <primitive field='defaultReport' type='boolean' value='false'/>
+           <reference field='reportDataSourceName' idref='i46'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i50' class='model.TestCaseExternalReports' superclasses=''>
+         <declaredClass class='model.TestCaseExternalReports'>
+          <default>
+           <string field='name' id='i51' value='REPORT_TESTCASE_LIST_EXCEL_2'/>
+           <string field='filePath' id='i52' value='/media/DATA/work/CM27Dorma/cm/cm/res/TestCaseReports/TestCaseList2Excel.xsl'/>
+           <reference field='extension' idref='i44'/>
+           <primitive field='reportDataSourceId' type='int' value='0'/>
+           <reference field='defaultApp' idref='i45'/>
+           <primitive field='protectedReport' type='boolean' value='true'/>
+           <primitive field='defaultReport' type='boolean' value='false'/>
+           <reference field='reportDataSourceName' idref='i46'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i53' class='model.TestCaseExternalReports' superclasses=''>
+         <declaredClass class='model.TestCaseExternalReports'>
+          <default>
+           <string field='name' id='i54' value='REPORT_TESTCASE_LIST_EXCEL_2_MOD1'/>
+           <string field='filePath' id='i55' value='/media/DATA/work/CM27Dorma/cm/cm/res/TestCaseReports/TestCaseList2Excel_1.xsl'/>
+           <reference field='extension' idref='i44'/>
+           <primitive field='reportDataSourceId' type='int' value='0'/>
+           <reference field='defaultApp' idref='i45'/>
+           <primitive field='protectedReport' type='boolean' value='true'/>
+           <primitive field='defaultReport' type='boolean' value='false'/>
+           <reference field='reportDataSourceName' idref='i46'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i56' class='model.TestCaseExternalReports' superclasses=''>
+         <declaredClass class='model.TestCaseExternalReports'>
+          <default>
+           <string field='name' id='i57' value='REPORT_TESTCASE_EXPORT_TO_CSV'/>
+           <string field='filePath' id='i58' value='/media/DATA/work/CM27Dorma/cm/cm/res/TestCaseReports/TestCaseCSV.xsl'/>
+           <string field='extension' id='i59' value='csv'/>
+           <primitive field='reportDataSourceId' type='int' value='0'/>
+           <reference field='defaultApp' idref='i32'/>
+           <primitive field='protectedReport' type='boolean' value='true'/>
+           <primitive field='defaultReport' type='boolean' value='false'/>
+           <reference field='reportDataSourceName' idref='i46'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i60' class='model.TestCaseExternalReports' superclasses=''>
+         <declaredClass class='model.TestCaseExternalReports'>
+          <default>
+           <string field='name' id='i61' value='REPORT_DEPENDENCY_COMBINATION_LIST'/>
+           <string field='filePath' id='i62' value='/media/DATA/work/CM27Dorma/cm/cm/res/TestCaseReports/DepCombList.xsl'/>
+           <reference field='extension' idref='i44'/>
+           <primitive field='reportDataSourceId' type='int' value='0'/>
+           <reference field='defaultApp' idref='i45'/>
+           <primitive field='protectedReport' type='boolean' value='true'/>
+           <primitive field='defaultReport' type='boolean' value='false'/>
+           <string field='reportDataSourceName' id='i63' value='REPORTDS_DEPENDENCY_COMBINATION'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i64' class='model.TestCaseExternalReports' superclasses=''>
+         <declaredClass class='model.TestCaseExternalReports'>
+          <default>
+           <string field='name' id='i65' value='CSV2'/>
+           <string field='filePath' id='i66' value='/media/DATA/work/CM27Dorma/cm/cm/res/CSV2.xsl'/>
+           <reference field='extension' idref='i59'/>
+           <primitive field='reportDataSourceId' type='int' value='0'/>
+           <reference field='defaultApp' idref='i45'/>
+           <primitive field='protectedReport' type='boolean' value='true'/>
+           <primitive field='defaultReport' type='boolean' value='false'/>
+           <string field='reportDataSourceName' id='i67' value='REPORTDS_TESTDATASET'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i68' class='model.TestCaseExternalReports' superclasses=''>
+         <declaredClass class='model.TestCaseExternalReports'>
+          <default>
+           <string field='name' id='i69' value='REPORT_TESTDATA_DORMA_CSV'/>
+           <string field='filePath' id='i70' value='/media/DATA/work/CM27Dorma/cm/cm/res/CSVDorma.xsl'/>
+           <reference field='extension' idref='i59'/>
+           <primitive field='reportDataSourceId' type='int' value='0'/>
+           <reference field='defaultApp' idref='i45'/>
+           <primitive field='protectedReport' type='boolean' value='true'/>
+           <primitive field='defaultReport' type='boolean' value='false'/>
+           <string field='reportDataSourceName' id='i71' value='REPORTDS_TESTDATA_DORMA'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i72' class='model.TestCaseExternalReports' superclasses=''>
+         <declaredClass class='model.TestCaseExternalReports'>
+          <default>
+           <string field='name' id='i73' value='Test Case List for QADirector in XML format'/>
+           <string field='filePath' id='i74' value='/media/DATA/work/CM27Dorma/cm/cm/res/TestCaseReports/TestCaseList2QADirector.xsl'/>
+           <string field='extension' id='i75' value='xml'/>
+           <primitive field='reportDataSourceId' type='int' value='0'/>
+           <reference field='defaultApp' idref='i32'/>
+           <primitive field='protectedReport' type='boolean' value='false'/>
+           <primitive field='defaultReport' type='boolean' value='true'/>
+           <reference field='reportDataSourceName' idref='i46'/>
+          </default>
+         </declaredClass>
+        </object>
+       </collection>
+       <collection field='m_ExternalApplications' id='i76' class='java.util.Vector'>
+        <object id='i77' class='model.ExternalApplication' superclasses=''>
+         <declaredClass class='model.ExternalApplication'>
+          <default>
+           <reference field='m_Name' idref='i32'/>
+           <string field='m_FilePath' id='i78' value='C:/programme/internet explorer/iexplore.exe '/>
+           <reference field='m_Version' idref='i18'/>
+           <object field='m_TimeStamp' id='i79' class='java.util.Date' superclasses=''>
+            <declaredClass class='java.util.Date'>
+             <primitive type='long' value='1220793976973'/>
+            </declaredClass>
+           </object>
+           <reference field='m_Param' idref='i11'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i80' class='model.ExternalApplication' superclasses=''>
+         <declaredClass class='model.ExternalApplication'>
+          <default>
+           <reference field='m_Name' idref='i45'/>
+           <string field='m_FilePath' id='i81' value='C:/Programme/Microsoft Office/Office/excel.exe'/>
+           <reference field='m_Version' idref='i18'/>
+           <object field='m_TimeStamp' id='i82' class='java.util.Date' superclasses=''>
+            <declaredClass class='java.util.Date'>
+             <primitive type='long' value='1220793976973'/>
+            </declaredClass>
+           </object>
+           <reference field='m_Param' idref='i11'/>
+          </default>
+         </declaredClass>
+        </object>
+       </collection>
+       <collection field='m_ToolVendors' id='i83' class='java.util.Vector'>
+        <object id='i84' class='model.ToolVendor' superclasses=''>
+         <declaredClass class='model.ToolVendor'>
+          <default>
+           <primitive field='id' type='int' value='-1'/>
+           <string field='m_Name' id='i85' value='compuware'/>
+           <string field='m_FilePath' id='i86' value='ToolVendors/compuware.ctv.xml'/>
+           <collection field='m_Technologies' id='i87' class='java.util.Vector'/>
+           <null field='m_Technology'/>
+           <reference field='m_Version' idref='i18'/>
+           <object field='m_TimeStamp' id='i88' class='java.util.Date' superclasses=''>
+            <declaredClass class='java.util.Date'>
+             <primitive type='long' value='1220793976973'/>
+            </declaredClass>
+           </object>
+          </default>
+         </declaredClass>
+        </object>
+       </collection>
+       <primitive field='m_MaxNumOfCombinations' type='int' value='999'/>
+       <primitive field='m_MaxNumOfPositiveTestCases' type='int' value='200'/>
+       <primitive field='m_MaxNumOfNegativeTestCases' type='int' value='400'/>
+       <primitive field='m_MaxNumOfFaultyTestCases' type='int' value='400'/>
+       <primitive field='m_MaxSizeofXMLFiles' type='float' value='20.0'/>
+      </default>
+     </declaredClass>
+    </object>
+    <null field='windowsDirectory'/>
+   </default>
+  </declaredClass>
+ </object>
+</jsx>

@@ -1,0 +1,419 @@
+/**
+ * JavaCC file
+ */
+options {
+    // do not remove or modify the following 5 lines:
+    STATIC = false; // more instances of the token manager will be allowed
+    //USER_CHAR_STREAM = true; // user provided CharStream
+    BUILD_PARSER = true; // do not build parser
+    BUILD_TOKEN_MANAGER = true; // build token manager
+   // UNICODE_INPUT = true; // input will be unicode characters
+}
+
+PARSER_BEGIN(VisioImport)
+package bi.controller.visio.parser;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.List;
+import java.util.ArrayList;
+
+import model.visioimport.FlowObject;
+import model.visioimport.StateObject;
+import model.visioimport.WorkFlowObject;
+import model.visioimport.RelationObject;
+import model.visioimport.ConstraintObject;
+import bi.view.businessrulesviews.wizard.CMBRVisioImporter;
+
+public class VisioImport {
+  
+private CMBRVisioImporter importer;
+public CMBRVisioImporter getImporter(){
+	if (importer == null)
+		importer = new CMBRVisioImporter();
+	return importer;
+}
+public void setImporter(CMBRVisioImporter importer){
+	this.importer = importer;
+}
+
+public static void main(String args[]) throws ParseException {
+    FileReader fileReader = null;
+    Reader reader = null;
+    
+    File file= new File("");
+    
+      System.out.println("Reading from standard input...");
+      System.out.print("Enter File Path:");
+      try{
+
+    	  BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+    	   file=new File(br.readLine());
+
+    	  }catch(Exception e){ e.printStackTrace();}
+
+      try {
+		fileReader = new FileReader(file);
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		reader = new BufferedReader(fileReader);
+		VisioImport parser = new VisioImport(reader);
+		parser.start();
+//		System.out.println(visioImportManager.getCurrentWorkFlow().toString());//		visioImportManager.setOutGoingFlowForEachState();//		System.out.println(visioImportManager.getBusinessRulesFromWorkFlowObject());
+    
+  }
+}
+PARSER_END(VisioImport)
+
+SKIP  : {" "|"\t"| "\n"| "\r"| "\f" | "\r\n" }
+TOKEN:
+{
+<BEGINPAGE:"Begin_Page">
+|
+<ENDPAGE: "End_Page">
+|
+<PAGENAME: "Page_Name">	
+|
+<DOTS: ":">
+|
+<SEMICOLON:";">
+|
+<BEGININISTATE: "Begin_InitialState">
+|
+<ENDINISTATE: "End_InitialState">
+|
+<TYPE:"Type">
+|
+<BEGINFINALSTATE:"Begin_FinalState">
+|
+<ENDFINALSTATE:"End_FinalState">
+|
+<ID:"ID">
+|
+<BEGINSTATE:"Begin_State">
+|
+<ENDSTATE:"End_State">
+|
+<BUSINESSACTION: "Business Action">
+|
+<EQUALS:"=">
+|
+<BEGINTRANSITION:"Begin_Transition">
+|
+<ENDTRANSITION:"End_Transition">
+|
+<TRANSITION:"Transition">
+|
+<BEGIN:"Begin">
+|
+<END:"End">
+|
+<NUMBER: ["1"-"9"](["0"-"9"])*>
+|
+<QUOTES:"\"">
+|
+<VALUES:(<QUOTES>)(~["\""])*(<QUOTES>)  >   //(~[";"])+>
+|
+<BEGINCONSTRAINT:"Begin_Constraint">
+|
+<ENDCONSTRAINT:"End_Constraint">
+|
+<BEGINRELATION:"Begin_Relation">
+|
+<ENDRELATION:"End_Relation">
+|
+<STATECONSTRAINT:"STATE">
+|
+<RISKLEVELCONSTRAINT:"RISK LEVEL">
+|
+<REQUIREMENTSCONSTRAINT:"REQUIREMENTS">
+|
+<RESULTCONSTRAINT:"RESULT">
+|
+<STATEVALUE:"POSITIVE"|"NEGATIVE"|"FAULTY"|"IRRELEVANT">
+|
+<OPENBRACKET:"{">
+|
+<CLOSEBRACKET:"}">
+|
+<COMMA:",">
+}
+TOKEN: {<STRINGS: ~[]>}
+void start():
+{}
+{
+	(page())+<EOF> 
+	
+}
+
+void page():
+{}
+{
+	<BEGINPAGE><SEMICOLON>
+	pageName()(
+	initialState() 
+	| 
+	state()
+	| 
+	transition()
+	|
+	constraint()
+	|
+	relation()
+	|
+	finalState())*
+	<ENDPAGE><SEMICOLON>
+}
+
+void pageName():
+{Token t;}
+{
+	<PAGENAME><DOTS>t=<VALUES><SEMICOLON>
+	{
+		WorkFlowObject workFlowObject=getImporter().createWorkFlowObject(t.image.trim());
+		getImporter().setCurrentWorkFlow(workFlowObject);
+		getImporter().addWorkFlowObject(workFlowObject);
+	}
+}
+void initialState():
+{String name;
+int id;}
+{
+	<BEGININISTATE><SEMICOLON>
+		name= type()
+		id=id()
+	<ENDINISTATE><SEMICOLON>
+	{
+		StateObject l_StateObject= getImporter().createStateObject(name.trim(),id,null);
+		getImporter().addStateObjectToCurrentDiagram(l_StateObject);
+	}
+}
+
+void state():
+{String name;
+int id;
+Token t;}
+{
+	<BEGINSTATE><SEMICOLON>
+	name=type()
+	id=id()
+	<BUSINESSACTION><EQUALS>t=<VALUES><SEMICOLON>
+	<ENDSTATE><SEMICOLON>
+	{
+	StateObject l_StateObject=getImporter().createStateObject(name.trim(),id,t.image.trim());
+		getImporter().addStateObjectToCurrentDiagram(l_StateObject);
+	}
+}
+
+void constraint():
+{
+int id;
+String state="";
+int riskLevel=-1;
+String reqs="";
+String values="";
+}
+{
+	<BEGINCONSTRAINT><SEMICOLON>
+	
+	id=id()
+	(state=stateConstraint()
+	 |
+	 riskLevel=riskLevelConstraint()
+	 |
+	 reqs=requirementConstraints()
+	 |
+	 values=resultConstraint())*
+	<ENDCONSTRAINT><SEMICOLON>
+	{
+		ConstraintObject constraintObject=getImporter().createConstraintObject(id,state,riskLevel,reqs,values);
+		getImporter().addConstraintObjectToCurrentDiagram(constraintObject);
+	}
+}
+String stateConstraint():
+{Token t;
+String temp="";}
+{
+	<STATECONSTRAINT>
+	[<EQUALS>]
+	t=<STATEVALUE>
+	[<SEMICOLON>]
+	{
+		return t.image;
+	}
+}
+int riskLevelConstraint():
+{Token t;
+int value = -1;}
+{
+	<RISKLEVELCONSTRAINT>
+	(
+	<EQUALS>
+		(
+		t=<NUMBER>[<SEMICOLON>]
+		{value = Integer.parseInt(t.image);}
+		|	
+		t=<VALUES>[<SEMICOLON>]
+		{value = Integer.parseInt(getImporter().deleteQuotes(t.image));}
+		)
+	|
+	t=<NUMBER>[<SEMICOLON>]
+	{value = Integer.parseInt(t.image);}
+	)
+	{
+		return value;
+	}
+	
+}
+String requirementConstraints():
+{Token t;
+String temp="";}
+{
+	<REQUIREMENTSCONSTRAINT>
+	[<EQUALS>]
+	t=<OPENBRACKET>
+	{temp+=t.image;}
+	t=<VALUES>
+	{temp+=t.image;}
+	(t=<COMMA>
+	{temp+=t.image;}
+	 t=<VALUES>
+	{temp+=t.image;})*
+	t=<CLOSEBRACKET>
+	{temp+=t.image;}
+	[<SEMICOLON>]
+	{
+		return temp.toString();
+	}
+}
+
+
+String resultConstraint():
+{Token t;
+String temp="";}
+{
+	<RESULTCONSTRAINT>
+	[<EQUALS>]
+	t=<OPENBRACKET>
+	{temp+=t.image;}
+	t=<STRINGS>
+	{temp+=text(t.image);}
+	t=<EQUALS>
+	{temp+=t.image;}
+	t=<VALUES>
+	{temp+=t.image;}
+	(t=<COMMA>
+		{temp+=t.image;}
+		t=<STRINGS>
+		{temp+=text(t.image);}
+		t=<EQUALS>
+		{temp+=t.image;}
+		t=<VALUES>
+		{temp+=t.image;}
+		)*	
+	t=<CLOSEBRACKET>
+	{temp+=t.image;}
+	[<SEMICOLON>]
+	{
+		return temp;
+	}
+}
+void transition():
+{Token t;
+ String startPoint;
+ String endPoint;	
+}
+{
+	<BEGINTRANSITION><SEMICOLON>
+	<TRANSITION><EQUALS>t=<VALUES><SEMICOLON>
+	startPoint=startPoint()
+	endPoint = endPoint()
+	<ENDTRANSITION><SEMICOLON>
+	{
+		FlowObject l_FlowObject=getImporter().createFlowObject(t.image.trim(),startPoint.trim(),endPoint.trim());
+		getImporter().addFlowObjectToCurrentDiagram(l_FlowObject);
+	}
+}
+void relation():
+{
+ String startPoint;
+ String endPoint;	
+}
+{
+	<BEGINRELATION><SEMICOLON>
+	startPoint=startPoint()
+	endPoint = endPoint()
+	<ENDRELATION><SEMICOLON>
+	{
+		RelationObject relationObject=getImporter().createRelationObject(startPoint.trim(),endPoint.trim());
+		getImporter().addRelationToCurrentDiagram(relationObject);
+	}
+}
+void finalState():
+{String name;
+int id;}
+{
+	<BEGINFINALSTATE><SEMICOLON>
+		name= type()
+		id=id()
+	<ENDFINALSTATE><SEMICOLON>
+	{
+	StateObject l_StateObject=getImporter().createStateObject(name.trim(),id,null);
+		getImporter().addStateObjectToCurrentDiagram(l_StateObject);
+	}
+}
+
+String type():
+{Token t;}
+{
+	<TYPE><EQUALS>t=<VALUES><SEMICOLON>
+	{
+		return t.image;
+	}
+}
+
+int id():
+{Token t;}
+{
+	<ID><EQUALS>t=<NUMBER><SEMICOLON>
+	{return new Integer(t.image).intValue();}
+}
+
+String startPoint():
+{Token t;}
+{
+	<BEGIN><EQUALS>t=<VALUES><SEMICOLON>
+	{return t.image;}
+}
+
+String endPoint():
+{Token t;}
+{
+	<END><EQUALS>t=<VALUES><SEMICOLON>
+	{return t.image;}
+}
+String text(String string):
+{
+	StringBuffer result=new StringBuffer();
+	Token t;
+}
+{
+	{
+		result.append(string);
+	}
+	(t=<STRINGS>
+		{
+			result.append(t.image);
+		}
+	)*
+	{
+		return result.toString();
+	}	
+} 

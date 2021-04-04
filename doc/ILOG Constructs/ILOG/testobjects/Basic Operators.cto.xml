@@ -1,0 +1,731 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- jsx.org, (c) -->
+<jsx major='1' minor='1' format='JSX.DataReader'>
+ <object id='i0' class='model.TestObject' superclasses=''>
+  <declaredClass class='model.TestObject'>
+   <default>
+    <object field='m_Structure' id='i1' class='model.Structure' superclasses=''>
+     <declaredClass class='model.Structure'>
+      <default>
+       <collection field='lnkElements' id='i2' class='java.util.Vector'>
+        <object id='i3' class='model.Element' superclasses=''>
+         <declaredClass class='model.Element'>
+          <default>
+           <collection field='lnkEquivalenceClasses' id='i4' class='java.util.Vector'>
+            <object id='i5' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='1'/>
+               <string field='name' id='i6' value='EC001'/>
+               <string field='description' id='i7' value='Associates two conditions with a logical AND (conjunction). 
+'/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i8' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173921413015'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i9' class='java.util.Vector'>
+                <object id='i10' class='model.Effect' superclasses=''>
+                 <declaredClass class='model.Effect'>
+                  <default>
+                   <reference field='lnkStructure' idref='i1'/>
+                   <primitive field='id' type='int' value='1'/>
+                   <string field='name' id='i11' value='CE001'/>
+                   <string field='description' id='i12' value='AND [Condition]'/>
+                   <object field='timestamp' id='i13' class='java.util.Date' superclasses=''>
+                    <declaredClass class='java.util.Date'>
+                     <primitive type='long' value='1173921448218'/>
+                    </declaredClass>
+                   </object>
+                   <collection field='lnkEquivalenceClasses' id='i14' class='java.util.Vector'/>
+                   <collection field='lnkRequirements' id='i15' class='java.util.ArrayList'/>
+                   <collection field='lnkExpectedResults' id='i16' class='java.util.ArrayList'/>
+                   <primitive field='m_State' type='int' value='3'/>
+                   <primitive field='m_RiskLevel' type='int' value='0'/>
+                  </default>
+                 </declaredClass>
+                </object>
+               </collection>
+               <reference field='lnkElement' idref='i3'/>
+               <string field='value' id='i17' value='and &lt;condition&gt; '/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <object field='defaultComparator' id='i18' class='model.util.CMIdComparator' superclasses=''>
+                <declaredClass class='model.util.CMIdComparator'>
+                 <default/>
+                </declaredClass>
+               </object>
+              </default>
+             </declaredClass>
+            </object>
+            <object id='i19' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='2'/>
+               <string field='name' id='i20' value='EC002'/>
+               <string field='description' id='i21' value='Negates a condition. 
+
+NOT IMPLEMENTED!'/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i22' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173921482109'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i23' class='java.util.Vector'>
+                <object id='i24' class='model.Effect' superclasses=''>
+                 <declaredClass class='model.Effect'>
+                  <default>
+                   <reference field='lnkStructure' idref='i1'/>
+                   <primitive field='id' type='int' value='2'/>
+                   <string field='name' id='i25' value='CE002'/>
+                   <string field='description' id='i26' value='NATIVE [NOT (condition)]
+
+The NOT operator is not implemented yet in CM'/>
+                   <object field='timestamp' id='i27' class='java.util.Date' superclasses=''>
+                    <declaredClass class='java.util.Date'>
+                     <primitive type='long' value='1173921513750'/>
+                    </declaredClass>
+                   </object>
+                   <collection field='lnkEquivalenceClasses' id='i28' class='java.util.Vector'/>
+                   <collection field='lnkRequirements' id='i29' class='java.util.ArrayList'>
+                    <object id='i30' class='model.Requirement' superclasses=''>
+                     <declaredClass class='model.Requirement'>
+                      <default>
+                       <string field='name' id='i31' value='CMKR00002260 Not Operator'/>
+                       <reference field='parentStructure' idref='i1'/>
+                      </default>
+                     </declaredClass>
+                    </object>
+                   </collection>
+                   <collection field='lnkExpectedResults' id='i32' class='java.util.ArrayList'/>
+                   <primitive field='m_State' type='int' value='3'/>
+                   <primitive field='m_RiskLevel' type='int' value='0'/>
+                  </default>
+                 </declaredClass>
+                </object>
+               </collection>
+               <reference field='lnkElement' idref='i3'/>
+               <string field='value' id='i33' value='it is not true that &lt;condition&gt; '/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <object field='defaultComparator' id='i34' class='model.util.CMIdComparator' superclasses=''>
+                <declaredClass class='model.util.CMIdComparator'>
+                 <default/>
+                </declaredClass>
+               </object>
+              </default>
+             </declaredClass>
+            </object>
+            <object id='i35' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='3'/>
+               <string field='name' id='i36' value='EC003'/>
+               <string field='description' id='i37' value='Associates two conditions with a logical OR (disjunction). 
+'/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i38' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173921854671'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i39' class='java.util.Vector'>
+                <object id='i40' class='model.Effect' superclasses=''>
+                 <declaredClass class='model.Effect'>
+                  <default>
+                   <reference field='lnkStructure' idref='i1'/>
+                   <primitive field='id' type='int' value='3'/>
+                   <string field='name' id='i41' value='CE003'/>
+                   <string field='description' id='i42' value='OR (Condition)'/>
+                   <object field='timestamp' id='i43' class='java.util.Date' superclasses=''>
+                    <declaredClass class='java.util.Date'>
+                     <primitive type='long' value='1173921868250'/>
+                    </declaredClass>
+                   </object>
+                   <collection field='lnkEquivalenceClasses' id='i44' class='java.util.Vector'/>
+                   <collection field='lnkRequirements' id='i45' class='java.util.ArrayList'/>
+                   <collection field='lnkExpectedResults' id='i46' class='java.util.ArrayList'/>
+                   <primitive field='m_State' type='int' value='3'/>
+                   <primitive field='m_RiskLevel' type='int' value='0'/>
+                  </default>
+                 </declaredClass>
+                </object>
+               </collection>
+               <reference field='lnkElement' idref='i3'/>
+               <string field='value' id='i47' value='or &lt;condition&gt; '/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <null field='defaultComparator'/>
+              </default>
+             </declaredClass>
+            </object>
+           </collection>
+           <primitive field='id' type='int' value='1'/>
+           <string field='name' id='i48' value='LOGICAL OPERATOR'/>
+           <primitive field='stateOT' type='int' value='0'/>
+           <string field='ObjectTypesValue' id='i49' value='JavaButton'/>
+           <string field='description' id='i50' value='Includes all Logical operators of JRULES'/>
+           <object field='timestamp' id='i51' class='java.util.Date' superclasses=''>
+            <declaredClass class='java.util.Date'>
+             <primitive type='long' value='1173920893031'/>
+            </declaredClass>
+           </object>
+           <primitive field='userOrder' type='int' value='1'/>
+           <null field='lnkrevDependency'/>
+           <string field='label' id='i52' value=''/>
+           <reference field='lnkStructure' idref='i1'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i53' class='model.Element' superclasses=''>
+         <declaredClass class='model.Element'>
+          <default>
+           <collection field='lnkEquivalenceClasses' id='i54' class='java.util.Vector'>
+            <object id='i55' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='1'/>
+               <string field='name' id='i56' value='EC001'/>
+               <string field='description' id='i57' value='Makes a number negative. '/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i58' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173921206046'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i59' class='java.util.Vector'/>
+               <reference field='lnkElement' idref='i53'/>
+               <string field='value' id='i60' value='- &lt;number&gt; '/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <object field='defaultComparator' id='i61' class='model.util.CMIdComparator' superclasses=''>
+                <declaredClass class='model.util.CMIdComparator'>
+                 <default/>
+                </declaredClass>
+               </object>
+              </default>
+             </declaredClass>
+            </object>
+            <object id='i62' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='2'/>
+               <string field='name' id='i63' value='EC002'/>
+               <string field='description' id='i64' value='Adds a number to another number. '/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i65' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173921223343'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i66' class='java.util.Vector'/>
+               <reference field='lnkElement' idref='i53'/>
+               <string field='value' id='i67' value='&lt;number&gt; + &lt;number&gt;'/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <object field='defaultComparator' id='i68' class='model.util.CMIdComparator' superclasses=''>
+                <declaredClass class='model.util.CMIdComparator'>
+                 <default/>
+                </declaredClass>
+               </object>
+              </default>
+             </declaredClass>
+            </object>
+            <object id='i69' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='3'/>
+               <string field='name' id='i70' value='EC003'/>
+               <string field='description' id='i71' value='Subtracts a number from another number. '/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i72' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173921277125'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i73' class='java.util.Vector'/>
+               <reference field='lnkElement' idref='i53'/>
+               <string field='value' id='i74' value='&lt;number&gt; - &lt;number&gt; '/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <object field='defaultComparator' id='i75' class='model.util.CMIdComparator' superclasses=''>
+                <declaredClass class='model.util.CMIdComparator'>
+                 <default/>
+                </declaredClass>
+               </object>
+              </default>
+             </declaredClass>
+            </object>
+            <object id='i76' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='4'/>
+               <string field='name' id='i77' value='EC004'/>
+               <string field='description' id='i78' value='Divides a number by another number. When numbers are integers, this division corresponds to the euclidean division (or integer division). '/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i79' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173921316031'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i80' class='java.util.Vector'/>
+               <reference field='lnkElement' idref='i53'/>
+               <string field='value' id='i81' value='&lt;number&gt; / &lt;number&gt; '/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <object field='defaultComparator' id='i82' class='model.util.CMIdComparator' superclasses=''>
+                <declaredClass class='model.util.CMIdComparator'>
+                 <default/>
+                </declaredClass>
+               </object>
+              </default>
+             </declaredClass>
+            </object>
+            <object id='i83' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='5'/>
+               <string field='name' id='i84' value='EC005'/>
+               <string field='description' id='i85' value='Multiplies a number by another number. '/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i86' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173921330406'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i87' class='java.util.Vector'/>
+               <reference field='lnkElement' idref='i53'/>
+               <string field='value' id='i88' value='&lt;number&gt; * &lt;number&gt; '/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <object field='defaultComparator' id='i89' class='model.util.CMIdComparator' superclasses=''>
+                <declaredClass class='model.util.CMIdComparator'>
+                 <default/>
+                </declaredClass>
+               </object>
+              </default>
+             </declaredClass>
+            </object>
+            <object id='i90' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='6'/>
+               <string field='name' id='i91' value='EC006'/>
+               <string field='description' id='i92' value='Concatenates two strings. '/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i93' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173921344671'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i94' class='java.util.Vector'/>
+               <reference field='lnkElement' idref='i53'/>
+               <string field='value' id='i95' value='&lt;text&gt; + &lt;text&gt;'/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <object field='defaultComparator' id='i96' class='model.util.CMIdComparator' superclasses=''>
+                <declaredClass class='model.util.CMIdComparator'>
+                 <default/>
+                </declaredClass>
+               </object>
+              </default>
+             </declaredClass>
+            </object>
+            <object id='i97' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='7'/>
+               <string field='name' id='i98' value='EC007'/>
+               <string field='description' id='i99' value='Concatenates a number and a string. 
+'/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i100' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173921365359'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i101' class='java.util.Vector'/>
+               <reference field='lnkElement' idref='i53'/>
+               <string field='value' id='i102' value='&lt;number&gt; + &lt;text&gt;'/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <object field='defaultComparator' id='i103' class='model.util.CMIdComparator' superclasses=''>
+                <declaredClass class='model.util.CMIdComparator'>
+                 <default/>
+                </declaredClass>
+               </object>
+              </default>
+             </declaredClass>
+            </object>
+            <object id='i104' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='8'/>
+               <string field='name' id='i105' value='EC008'/>
+               <string field='description' id='i106' value='Concatenates a string and a number'/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i107' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173921379984'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i108' class='java.util.Vector'/>
+               <reference field='lnkElement' idref='i53'/>
+               <string field='value' id='i109' value='&lt;text&gt; + &lt;number&gt; '/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <null field='defaultComparator'/>
+              </default>
+             </declaredClass>
+            </object>
+           </collection>
+           <primitive field='id' type='int' value='2'/>
+           <string field='name' id='i110' value='ARITHMETICAL OPERATOR'/>
+           <primitive field='stateOT' type='int' value='0'/>
+           <reference field='ObjectTypesValue' idref='i49'/>
+           <string field='description' id='i111' value='Includes all Artihmetical operators of JRULES'/>
+           <object field='timestamp' id='i112' class='java.util.Date' superclasses=''>
+            <declaredClass class='java.util.Date'>
+             <primitive type='long' value='1173920923796'/>
+            </declaredClass>
+           </object>
+           <primitive field='userOrder' type='int' value='2'/>
+           <null field='lnkrevDependency'/>
+           <reference field='label' idref='i52'/>
+           <reference field='lnkStructure' idref='i1'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i113' class='model.Element' superclasses=''>
+         <declaredClass class='model.Element'>
+          <default>
+           <collection field='lnkEquivalenceClasses' id='i114' class='java.util.Vector'>
+            <object id='i115' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='1'/>
+               <string field='name' id='i116' value='EC001'/>
+               <string field='description' id='i117' value='Tests that a date comes after another date. 
+'/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i118' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173922241171'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i119' class='java.util.Vector'>
+                <object id='i120' class='model.Effect' superclasses=''>
+                 <declaredClass class='model.Effect'>
+                  <default>
+                   <reference field='lnkStructure' idref='i1'/>
+                   <primitive field='id' type='int' value='4'/>
+                   <string field='name' id='i121' value='CE004'/>
+                   <string field='description' id='i122' value='&gt; (Greater)'/>
+                   <object field='timestamp' id='i123' class='java.util.Date' superclasses=''>
+                    <declaredClass class='java.util.Date'>
+                     <primitive type='long' value='1173922263515'/>
+                    </declaredClass>
+                   </object>
+                   <collection field='lnkEquivalenceClasses' id='i124' class='java.util.Vector'/>
+                   <collection field='lnkRequirements' id='i125' class='java.util.ArrayList'/>
+                   <collection field='lnkExpectedResults' id='i126' class='java.util.ArrayList'/>
+                   <primitive field='m_State' type='int' value='3'/>
+                   <primitive field='m_RiskLevel' type='int' value='0'/>
+                  </default>
+                 </declaredClass>
+                </object>
+               </collection>
+               <reference field='lnkElement' idref='i113'/>
+               <string field='value' id='i127' value='is after &lt;date&gt;'/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <object field='defaultComparator' id='i128' class='model.util.CMIdComparator' superclasses=''>
+                <declaredClass class='model.util.CMIdComparator'>
+                 <default/>
+                </declaredClass>
+               </object>
+              </default>
+             </declaredClass>
+            </object>
+            <object id='i129' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='2'/>
+               <string field='name' id='i130' value='EC002'/>
+               <string field='description' id='i131' value='Tests that a date is in a range in which both dates are excluded. 
+'/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i132' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173922313156'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i133' class='java.util.Vector'>
+                <object id='i134' class='model.Effect' superclasses=''>
+                 <declaredClass class='model.Effect'>
+                  <default>
+                   <reference field='lnkStructure' idref='i1'/>
+                   <primitive field='id' type='int' value='5'/>
+                   <string field='name' id='i135' value='CE005'/>
+                   <string field='description' id='i136' value=']date1,date2['/>
+                   <object field='timestamp' id='i137' class='java.util.Date' superclasses=''>
+                    <declaredClass class='java.util.Date'>
+                     <primitive type='long' value='1173922581125'/>
+                    </declaredClass>
+                   </object>
+                   <collection field='lnkEquivalenceClasses' id='i138' class='java.util.Vector'/>
+                   <collection field='lnkRequirements' id='i139' class='java.util.ArrayList'/>
+                   <collection field='lnkExpectedResults' id='i140' class='java.util.ArrayList'/>
+                   <primitive field='m_State' type='int' value='3'/>
+                   <primitive field='m_RiskLevel' type='int' value='0'/>
+                  </default>
+                 </declaredClass>
+                </object>
+               </collection>
+               <reference field='lnkElement' idref='i113'/>
+               <string field='value' id='i141' value='is after &lt;date&gt; and before &lt;date&gt;'/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <object field='defaultComparator' id='i142' class='model.util.CMIdComparator' superclasses=''>
+                <declaredClass class='model.util.CMIdComparator'>
+                 <default/>
+                </declaredClass>
+               </object>
+              </default>
+             </declaredClass>
+            </object>
+            <object id='i143' class='model.EquivalenceClass' superclasses=''>
+             <declaredClass class='model.EquivalenceClass'>
+              <default>
+               <primitive field='id' type='int' value='3'/>
+               <string field='name' id='i144' value='EC003'/>
+               <string field='description' id='i145' value='Tests that a date is in a range in which the first date is excluded, and the last date is included. 
+'/>
+               <primitive field='state' type='int' value='3'/>
+               <object field='timestamp' id='i146' class='java.util.Date' superclasses=''>
+                <declaredClass class='java.util.Date'>
+                 <primitive type='long' value='1173922562156'/>
+                </declaredClass>
+               </object>
+               <collection field='lnkEffects' id='i147' class='java.util.Vector'>
+                <object id='i148' class='model.Effect' superclasses=''>
+                 <declaredClass class='model.Effect'>
+                  <default>
+                   <reference field='lnkStructure' idref='i1'/>
+                   <primitive field='id' type='int' value='6'/>
+                   <string field='name' id='i149' value='CE006'/>
+                   <string field='description' id='i150' value=']date1,date2]'/>
+                   <object field='timestamp' id='i151' class='java.util.Date' superclasses=''>
+                    <declaredClass class='java.util.Date'>
+                     <primitive type='long' value='1173922615109'/>
+                    </declaredClass>
+                   </object>
+                   <collection field='lnkEquivalenceClasses' id='i152' class='java.util.Vector'/>
+                   <collection field='lnkRequirements' id='i153' class='java.util.ArrayList'/>
+                   <collection field='lnkExpectedResults' id='i154' class='java.util.ArrayList'/>
+                   <primitive field='m_State' type='int' value='3'/>
+                   <primitive field='m_RiskLevel' type='int' value='0'/>
+                  </default>
+                 </declaredClass>
+                </object>
+               </collection>
+               <reference field='lnkElement' idref='i113'/>
+               <string field='value' id='i155' value='is after &lt;date&gt; and on or before &lt;date&gt;'/>
+               <primitive field='m_RiskLevel' type='int' value='0'/>
+               <null field='defaultComparator'/>
+              </default>
+             </declaredClass>
+            </object>
+           </collection>
+           <primitive field='id' type='int' value='3'/>
+           <string field='name' id='i156' value='DATE OPERATOR'/>
+           <primitive field='stateOT' type='int' value='0'/>
+           <reference field='ObjectTypesValue' idref='i49'/>
+           <reference field='description' idref='i52'/>
+           <object field='timestamp' id='i157' class='java.util.Date' superclasses=''>
+            <declaredClass class='java.util.Date'>
+             <primitive type='long' value='1173920993890'/>
+            </declaredClass>
+           </object>
+           <primitive field='userOrder' type='int' value='3'/>
+           <null field='lnkrevDependency'/>
+           <reference field='label' idref='i52'/>
+           <reference field='lnkStructure' idref='i1'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i158' class='model.Element' superclasses=''>
+         <declaredClass class='model.Element'>
+          <default>
+           <collection field='lnkEquivalenceClasses' id='i159' class='java.util.Vector'/>
+           <primitive field='id' type='int' value='4'/>
+           <string field='name' id='i160' value='NUMBER OPERATOR'/>
+           <primitive field='stateOT' type='int' value='0'/>
+           <reference field='ObjectTypesValue' idref='i49'/>
+           <reference field='description' idref='i52'/>
+           <object field='timestamp' id='i161' class='java.util.Date' superclasses=''>
+            <declaredClass class='java.util.Date'>
+             <primitive type='long' value='1173921014750'/>
+            </declaredClass>
+           </object>
+           <primitive field='userOrder' type='int' value='4'/>
+           <null field='lnkrevDependency'/>
+           <reference field='label' idref='i52'/>
+           <reference field='lnkStructure' idref='i1'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i162' class='model.Element' superclasses=''>
+         <declaredClass class='model.Element'>
+          <default>
+           <collection field='lnkEquivalenceClasses' id='i163' class='java.util.Vector'/>
+           <primitive field='id' type='int' value='5'/>
+           <string field='name' id='i164' value='TEXT OPERATOR'/>
+           <primitive field='stateOT' type='int' value='0'/>
+           <reference field='ObjectTypesValue' idref='i49'/>
+           <reference field='description' idref='i52'/>
+           <object field='timestamp' id='i165' class='java.util.Date' superclasses=''>
+            <declaredClass class='java.util.Date'>
+             <primitive type='long' value='1173921046265'/>
+            </declaredClass>
+           </object>
+           <primitive field='userOrder' type='int' value='5'/>
+           <null field='lnkrevDependency'/>
+           <reference field='label' idref='i52'/>
+           <reference field='lnkStructure' idref='i1'/>
+          </default>
+         </declaredClass>
+        </object>
+        <object id='i166' class='model.Element' superclasses=''>
+         <declaredClass class='model.Element'>
+          <default>
+           <collection field='lnkEquivalenceClasses' id='i167' class='java.util.Vector'/>
+           <primitive field='id' type='int' value='6'/>
+           <string field='name' id='i168' value='BAL LITERAL'/>
+           <primitive field='stateOT' type='int' value='0'/>
+           <reference field='ObjectTypesValue' idref='i49'/>
+           <reference field='description' idref='i52'/>
+           <object field='timestamp' id='i169' class='java.util.Date' superclasses=''>
+            <declaredClass class='java.util.Date'>
+             <primitive type='long' value='1173921141046'/>
+            </declaredClass>
+           </object>
+           <primitive field='userOrder' type='int' value='6'/>
+           <null field='lnkrevDependency'/>
+           <reference field='label' idref='i52'/>
+           <reference field='lnkStructure' idref='i1'/>
+          </default>
+         </declaredClass>
+        </object>
+       </collection>
+       <primitive field='id' type='int' value='-1'/>
+       <string field='name' id='i170' value=''/>
+       <reference field='description' idref='i170'/>
+       <object field='timestamp' id='i171' class='java.util.Date' superclasses=''>
+        <declaredClass class='java.util.Date'>
+         <primitive type='long' value='1173920876781'/>
+        </declaredClass>
+       </object>
+       <collection field='lnkRequirements' id='i172' class='java.util.ArrayList'>
+        <reference idref='i30'/>
+       </collection>
+       <collection field='lnkEffects' id='i173' class='java.util.Vector'>
+        <reference idref='i10'/>
+        <reference idref='i24'/>
+        <reference idref='i40'/>
+        <reference idref='i120'/>
+        <reference idref='i134'/>
+        <reference idref='i148'/>
+       </collection>
+       <collection field='lnkDependencies' id='i174' class='java.util.Vector'/>
+       <collection field='lnkTestCases' id='i175' class='java.util.Vector'/>
+       <collection field='lnkStdCombinations' id='i176' class='java.util.Vector'/>
+       <reference field='m_TestObject' idref='i0'/>
+       <collection field='m_TestCaseGroups' id='i177' class='java.util.Vector'>
+        <object id='i178' class='model.PositiveTestCaseGroup' superclasses='model.TestCaseGroup,'>
+         <declaredClass class='model.TestCaseGroup'>
+          <default>
+           <collection field='m_Dependencies' id='i179' class='java.util.Vector'/>
+          </default>
+         </declaredClass>
+         <declaredClass class='model.PositiveTestCaseGroup'>
+          <default/>
+         </declaredClass>
+        </object>
+        <object id='i180' class='model.NegativeTestCaseGroup' superclasses='model.TestCaseGroup,'>
+         <declaredClass class='model.TestCaseGroup'>
+          <default>
+           <collection field='m_Dependencies' id='i181' class='java.util.Vector'/>
+          </default>
+         </declaredClass>
+         <declaredClass class='model.NegativeTestCaseGroup'>
+          <default/>
+         </declaredClass>
+        </object>
+        <object id='i182' class='model.FaultyTestCaseGroup' superclasses='model.TestCaseGroup,'>
+         <declaredClass class='model.TestCaseGroup'>
+          <default>
+           <collection field='m_Dependencies' id='i183' class='java.util.Vector'/>
+          </default>
+         </declaredClass>
+         <declaredClass class='model.FaultyTestCaseGroup'>
+          <default/>
+         </declaredClass>
+        </object>
+        <object id='i184' class='model.IrrelevantTestCaseGroup' superclasses='model.TestCaseGroup,'>
+         <declaredClass class='model.TestCaseGroup'>
+          <default>
+           <collection field='m_Dependencies' id='i185' class='java.util.Vector'/>
+          </default>
+         </declaredClass>
+         <declaredClass class='model.IrrelevantTestCaseGroup'>
+          <default/>
+         </declaredClass>
+        </object>
+       </collection>
+       <collection field='m_CMErrors' id='i186' class='java.util.Vector'/>
+      </default>
+     </declaredClass>
+    </object>
+    <object field='m_TimeStamp' id='i187' class='java.util.Date' superclasses=''>
+     <declaredClass class='java.util.Date'>
+      <primitive type='long' value='1173920876250'/>
+     </declaredClass>
+    </object>
+    <string field='m_Description' id='i188' value=' '/>
+    <string field='m_Name' id='i189' value='Basic Operators'/>
+    <string field='m_Preconditions' id='i190' value=' '/>
+    <string field='m_MilesSeparator' id='i191' value='.'/>
+    <primitive field='m_DefaultSeparator' type='boolean' value='false'/>
+    <string field='m_DecimalSeparator' id='i192' value=','/>
+    <string field='m_ToolVendor' id='i193' value='compuware'/>
+    <string field='m_ToolVendorTechnology' id='i194' value='Java'/>
+    <string field='m_AccessState' id='i195' value='Checked out'/>
+    <string field='m_User' id='i196' value='Sergio Moreno'/>
+    <object field='m_BRulesReference' id='i197' class='model.BRulesReference' superclasses=''>
+     <declaredClass class='model.BRulesReference'>
+      <default>
+       <string field='fileLocation' id='i198' value='brules'/>
+       <string field='filePath' id='i199' value='brules/BRFile.txt'/>
+       <string field='fileName' id='i200' value='BRFile.txt'/>
+       <reference field='testObjectsFolderPath' idref='i170'/>
+       <reference field='testObjectName' idref='i170'/>
+       <primitive field='fileSyntax' type='int' value='0'/>
+       <null field='projectLocation'/>
+      </default>
+     </declaredClass>
+    </object>
+    <collection field='m_TDSTructureReference' id='i201' class='java.util.Vector'>
+     <object id='i202' class='model.TDStructureReference' superclasses=''>
+      <declaredClass class='model.TDStructureReference'>
+       <default>
+        <object field='m_TimeStamp' id='i203' class='java.util.Date' superclasses=''>
+         <declaredClass class='java.util.Date'>
+          <primitive type='long' value='1173920876250'/>
+         </declaredClass>
+        </object>
+        <reference field='m_TestObject' idref='i0'/>
+        <null field='m_TestObjectPath'/>
+        <string field='m_FilePath' id='i204' value='testdata/TestData.ctd.xml'/>
+        <string field='m_Path' id='i205' value='testdata'/>
+        <string field='m_FileName' id='i206' value='TestData.ctd.xml'/>
+        <string field='m_Name' id='i207' value='TestData'/>
+       </default>
+      </declaredClass>
+     </object>
+    </collection>
+    <string field='m_Version' id='i208' value='2.6'/>
+    <null field='m_Origin'/>
+   </default>
+  </declaredClass>
+ </object>
+</jsx>

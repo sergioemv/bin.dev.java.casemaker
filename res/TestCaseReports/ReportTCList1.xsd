@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xbi="testcaseslist.data.report.view.bi" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="testcaseslist.data.report.view.bi" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xs:complexType name="CombinationType">
+		<xs:sequence>
+			<xs:element name="Name" type="xbi:NameType"/>
+			<xs:element name="Description" type="xbi:DescriptionType"/>
+			<xs:element name="Effects" type="xbi:EffectsType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CombinationsType">
+		<xs:sequence>
+			<xs:element name="Combination" type="xbi:CombinationType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="Label" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="DescriptionType" mixed="true">
+		<xs:attribute name="Label" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="EffectType">
+		<xs:sequence>
+			<xs:element name="Name" type="xbi:NameType"/>
+			<xs:element name="Description" type="xbi:DescriptionType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EffectsType" mixed="true">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="Effect" type="xbi:EffectType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+		<xs:attribute name="Label" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="EquivalenceClassType">
+		<xs:sequence>
+			<xs:element name="Name" type="xbi:NameType"/>
+			<xs:element name="Value" type="xbi:ValueType"/>
+			<xs:element name="Description" type="xbi:DescriptionType"/>
+			<xs:element name="Effects" type="xbi:EffectsType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EquivalenceClassesType">
+		<xs:sequence>
+			<xs:element name="EquivalenceClass" type="xbi:EquivalenceClassType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="Label" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="IdType" mixed="true">
+		<xs:attribute name="Label" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="NameType" mixed="true">
+		<xs:attribute name="Label" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="RiskLevelType" mixed="true">
+		<xs:attribute name="Width" type="xs:string"/>
+		<xs:attribute name="Color" type="xs:string"/>
+		<xs:attribute name="Label" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="StdCombinationType">
+		<xs:sequence>
+			<xs:element name="Name" type="xbi:NameType"/>
+			<xs:element name="Description" type="xbi:DescriptionType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="StdCombinationsType">
+		<xs:sequence>
+			<xs:element name="StdCombination" type="xbi:StdCombinationType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="Label" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TestCaseType">
+		<xs:sequence>
+			<xs:element name="Id" type="xbi:IdType"/>
+			<xs:element name="RiskLevel" type="xbi:RiskLevelType"/>
+			<xs:element name="Description" type="xbi:DescriptionType"/>
+			<xs:element name="UserDescription" type="xbi:UserDescriptionType"/>
+			<xs:element name="Effects" type="xbi:EffectsType"/>
+			<xs:element name="StdCombinations" type="xbi:StdCombinationsType"/>
+			<xs:element name="Combinations" type="xbi:CombinationsType"/>
+			<xs:element name="EquivalenceClasses" type="xbi:EquivalenceClassesType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="TestCaseListReport">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ReportHeadTitle" type="xs:string"/>
+				<xs:element name="ReportTitle" type="xs:string"/>
+				<xs:element name="HeaderImg" type="xs:string"/>
+				<xs:element name="Project">
+					<xs:complexType mixed="true">
+						<xs:attribute name="Label" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="TestObject">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Name" type="xbi:NameType"/>
+							<xs:element name="Description" type="xbi:DescriptionType"/>
+							<xs:element name="Precondition">
+								<xs:complexType mixed="true">
+									<xs:attribute name="Label" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Date">
+					<xs:complexType mixed="true">
+						<xs:attribute name="Label" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="UserName">
+					<xs:complexType mixed="true">
+						<xs:attribute name="Label" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="RiskLevel" type="xbi:RiskLevelType" maxOccurs="unbounded"/>
+				<xs:element name="TestCases">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TestCase" type="xbi:TestCaseType" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+						<xs:attribute name="Label" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="UserDescriptionType">
+		<xs:attribute name="Label" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ValueType" mixed="true">
+		<xs:attribute name="Label" type="xs:string"/>
+	</xs:complexType>
+</xs:schema>

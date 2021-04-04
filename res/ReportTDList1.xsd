@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2006 U (http://www.altova.com) by hmendez (EMBRACE) -->
+<xs:schema xmlns:tdsl="testdatasetlist.data.report.view.bi" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="testdatasetlist.data.report.view.bi" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="ReportTestDataSet">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="TestDataSet">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="tdsl:TestDataSetType"/>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="TypeDataType">
+		<xs:attribute name="Preffix" type="xs:string" use="required"/>
+		<xs:attribute name="Value" type="xs:string" use="required"/>
+		<xs:attribute name="Suffix" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="StructureTestDataType">
+		<xs:sequence>
+			<xs:element name="TypeData" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="tdsl:TypeDataType"/>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TestDataType">
+		<xs:sequence>
+			<xs:element name="StructureTestData" type="tdsl:StructureTestDataType"/>
+		</xs:sequence>
+		<xs:attribute name="TDNameStructureTDName" type="xs:string" use="required"/>
+		<xs:attribute name="TestCaseInTestData" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TestDataSetType">
+		<xs:sequence>
+			<xs:element name="LabelTypeDatasName" type="tdsl:TypeDatasNameType" maxOccurs="unbounded"/>
+			<xs:element name="TestData" type="tdsl:TestDataType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="Name" type="xs:string" use="required"/>
+		<xs:attribute name="LabelTC" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TypeDatasNameType">
+		<xs:attribute name="Name" type="xs:string" use="required"/>
+	</xs:complexType>
+</xs:schema>

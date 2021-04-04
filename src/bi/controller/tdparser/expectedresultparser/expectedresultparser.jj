@@ -1,0 +1,119 @@
+/**
+ * Developed by BUSINESS SOFTWARE INNOVATIONS. .
+ * Copyright (c)2003 Díaz und Hilterscheid Unternehmensberatung. All rights reserved.
+ * This File contains the Tokens and GRammar for Expected Result Parser
+ * created by svonborries on 26/05/2008
+ */
+ 
+options {
+  // do not remove or modify the following 5 lines:
+    STATIC = false; // more instances of the token manager will be allowed
+    //USER_CHAR_STREAM = true; // user provided CharStream
+    BUILD_PARSER = true; // do not build parser
+    BUILD_TOKEN_MANAGER = true; // build token manager
+    //UNICODE_INPUT = true; // input will be unicode characters
+}
+PARSER_BEGIN(ExpectedResultParser)
+package bi.controller.tdparser.expectedresultparser;
+
+import java.util.List;
+import java.util.ArrayList;
+
+public class ExpectedResultParser {
+	
+	private List<String> columnHeader;
+	private List<String> columnValue;
+	
+	public List<String> getColumnHeader(){
+		if(columnHeader == null)
+			columnHeader = new ArrayList<String>();
+		return columnHeader;
+	}
+	
+	public List<String> getColumnValue(){
+		if(columnValue == null)
+			columnValue = new ArrayList<String>();
+		return columnValue;
+	}
+	
+	
+}
+
+PARSER_END(ExpectedResultParser)
+
+SKIP :
+{
+ 	" "
+|	"\r"
+|	"\t"
+|	"\n"
+|	"\f"
+|	"\r\n"
+}
+TOKEN : {<SEPARATOR : "|">}
+TOKEN: {<EQUAL : "=" >}
+TOKEN:{<STRINGS: (~["=", "|"])+>}
+
+void start():
+{}
+{
+	{
+		
+		columnValue = new ArrayList<String>();
+		columnHeader = new ArrayList<String>();
+	}
+	formalPolicy() 
+	<EOF>
+}
+
+void formalPolicy():
+{}
+{
+      setValues()
+}
+
+void setValues():
+{}
+{
+	//here we can upgrade the option of preffix or suffix
+	set()
+}
+void set():
+{
+	Token t;
+}
+{
+   (t=<STRINGS>
+   {
+   	 columnHeader.add(t.image);
+   })
+   
+   <EQUAL>
+   
+   (t=<STRINGS>
+   {
+   	 columnValue.add(t.image);
+   })
+   (moreElements())*
+}
+
+void moreElements():
+{
+	Token t;
+}
+{
+	<SEPARATOR>
+	
+	(t=<STRINGS>
+   {
+   	 columnHeader.add(t.image);
+   })
+   
+   <EQUAL>
+   
+   (t=<STRINGS>
+   {
+   	 columnValue.add(t.image);
+   })
+}
+

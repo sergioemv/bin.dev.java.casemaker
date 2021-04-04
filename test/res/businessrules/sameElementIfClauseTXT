@@ -1,0 +1,75 @@
+/*
+Example 1
+*/
+IF (A>0 AND  A!=10)THEN 
+  BUSINESS ACTION{Pass test One.}
+ENDIF
+/*
+Example 2
+*/
+IF (B>0 OR B<-10) THEN
+  IF (B!= 10) THEN
+    BUSINESS ACTION{Pass test Two}
+  ENDIF
+ENDIF
+/*
+Example 3
+*/
+IF (C>0 AND C<-10) THEN
+  IF (C != 10 OR C!=-10) THEN
+    BUSINESS ACTION{Pass test Three}
+ENDIF
+ENDIF
+/*
+Example 4
+*/
+IF (D>0 OR D<-10) THEN
+  IF (D!= 10 OR D!=-10) THEN
+    BUSINESS ACTION{Pass test Four}
+ENDIF
+ENDIF
+ /*
+Complex example
+*/
+
+IF(Event0000="click en ok ")THEN
+	BUSINESS ACTION{ DO} WITH  RISK LEVEL="10", RESULT{NADA="1" ,     OTRO="2" }, REQUIREMENTS{"UNO" , "DOS"} 
+	BUSINESS ACTION{Done}
+	IF(Event0007="click en Reject ")THEN
+		NEGATIVE BUSINESS ACTION{ Reject}
+		BUSINESS ACTION{Done}
+		IF(Event0000="click Save ")THEN
+			 NEGATIVE BUSINESS ACTION{ Save}
+			BUSINESS ACTION{Done}
+			IF(Event0003="Click en Verify ")THEN
+				NEGATIVE BUSINESS ACTION{ VERIFY}
+				 BUSINESS ACTION{Verified}
+				IF(Event0000="Event Untitled")THEN
+					NEGATIVE BUSINESS ACTION{Final State}
+				ENDIF
+			ENDIF
+		ELSE
+			IF(Event0003="Click en Verify ")THEN
+				 NEGATIVE BUSINESS ACTION{ VERIFY}
+				BUSINESS ACTION{Verified}
+				IF(Event0000="Event Untitled")THEN
+					NEGATIVE BUSINESS ACTION{Final State}
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+
+
+
+
+
+
+
+
+
+
+
+
+

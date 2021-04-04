@@ -1,0 +1,9 @@
+package model.util;
+
+public enum CMPerspective {
+
+	TESTCASE_NORMAL,
+	TESTCASE_WORKFLOW,
+	COMBINATION_AND_DEPENDENCIES,
+	ERROR_MANAGMENT
+}

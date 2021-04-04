@@ -1,0 +1,341 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  // do not remove or modify the following 5 lines:
+    STATIC = false; // more instances of the token manager will be allowed
+    //USER_CHAR_STREAM = true; // user provided CharStream
+    BUILD_PARSER = true; // do not build parser
+    BUILD_TOKEN_MANAGER = true; // build token manager
+   // UNICODE_INPUT = true; // input will be unicode characters
+}
+PARSER_BEGIN(EuropeanParserTiny)
+
+package bi.controller.tdparser.europeantiny;
+
+import bi.controller.TDStructureManager;
+import bi.view.utils.CMIntervalValue;
+
+import java.lang.StringBuffer;
+import java.util.Vector;
+import java.text.NumberFormat;
+import java.text.DecimalFormat;
+import java.util.Locale;
+import bi.controller.VariablesManager;
+import bi.view.mainframeviews.CMApplication;
+import org.apache.log4j.Logger;
+
+public class EuropeanParserTiny{
+        private int incrementValue=0;
+        private StringBuffer stringAcumulator;
+        private Vector intervalValues= new Vector();
+        private Vector intervalToExtraValue= new Vector();
+        private String writeFormat;
+
+        public Vector getIntervalValues(){
+                return intervalValues;
+        }
+        public Vector getIntervalsToExtraValue() {
+        	return intervalToExtraValue;
+        }
+        public String getstringAcumulator(){
+                return stringAcumulator.toString();
+        }
+        public String calculateValueOfRange(String operLog,String number){
+                int p=0;
+                if(operLog.equals(">")|| operLog.equals("<>"))
+                        p=1;
+                else
+                        if(operLog.equals("<"))
+                                p=-1;
+                if(p!=0){
+                        String numberToFloat=convertNumberInFloat(number);
+                        if(numberToFloat.indexOf(".")>=0){
+                                float add=calculateNumOfDecimal(numberToFloat, p);
+                                float  result=Float.parseFloat(numberToFloat);
+                                result=result+add;
+                                NumberFormat nf = NumberFormat.getInstance(Locale.US);
+                                DecimalFormat myFormatter = (DecimalFormat)nf;
+                                myFormatter.applyPattern(writeFormat);
+                                String output = myFormatter.format(result);
+                                number=output;//Float.toString(result);
+                                CMIntervalValue intervalValue= new CMIntervalValue();
+                                intervalValue.setNumber(new Float(result));
+                                intervalValue.setLocale(Locale.US);
+                                intervalValue.setDiff(new Float(Math.abs(-add)));
+                                intervalValue.setWriteFormat(writeFormat);
+                                intervalToExtraValue.addElement(intervalValue);
+                        }
+                        else{
+                                int result=Integer.parseInt(numberToFloat);
+                                result=result+p;
+                                NumberFormat nf = NumberFormat.getInstance(Locale.US);
+                                DecimalFormat myFormatter = (DecimalFormat)nf;
+                                myFormatter.applyPattern(writeFormat);
+                                String output = myFormatter.format(result);
+                                number=output;//Integer.toString(result);
+                                CMIntervalValue intervalValue= new CMIntervalValue();
+                                intervalValue.setNumber(new Integer(result));
+                                intervalValue.setLocale(Locale.US);
+                                intervalValue.setDiff(new Integer(Math.abs(-p)));
+                                intervalValue.setWriteFormat(writeFormat);
+                                intervalToExtraValue.addElement(intervalValue);
+                        }
+                }
+                else{
+                	String numberToFloat=convertNumberInFloat(number);
+                    if(numberToFloat.indexOf(".")>=0){
+                    	float  result=Float.parseFloat(numberToFloat);
+                    	float add=calculateNumOfDecimal(numberToFloat, 1);
+                    	CMIntervalValue intervalValue= new CMIntervalValue();
+                        intervalValue.setNumber(new Float(result));
+                        intervalValue.setLocale(Locale.US);
+                        if(operLog.indexOf(">") >= 0){
+                        	intervalValue.setDiff(new Float(-add));
+                        }
+                        else{
+                        	intervalValue.setDiff(new Float(Math.abs(add)));
+                        }
+                        intervalValue.setWriteFormat(writeFormat);
+                        intervalToExtraValue.addElement(intervalValue);
+                    }
+                    else{
+                    	int result=Integer.parseInt(numberToFloat);
+                    	CMIntervalValue intervalValue= new CMIntervalValue();
+                        intervalValue.setNumber(new Integer(result));
+                        intervalValue.setLocale(Locale.US);
+                        if(operLog.indexOf(">") >= 0){
+                        	intervalValue.setDiff(new Integer(-1));
+                        }
+                        else{
+                        	intervalValue.setDiff(new Integer(Math.abs(1)));
+                        }
+                        intervalValue.setWriteFormat(writeFormat);
+                        intervalToExtraValue.addElement(intervalValue);
+                    }
+                	
+                }
+                return number;
+        }
+                public String convertNumberInFloat(String number){
+                if(number.indexOf(",")>=0 /*&& number.indexOf(".")>=0*/){
+                        writeFormat="###,###.#";
+                }
+                else{
+                /*if(number.indexOf(",")>=0){
+			writeFormat="###,###";
+		}
+		else
+		if(number.indexOf(".")>=0){*/
+                        writeFormat="###.#";
+                /*}
+		else{
+			writeFormat="###";
+		}*/
+                }
+                number=number.replaceAll(",","");
+                return number;
+
+        }
+
+        public float calculateNumOfDecimal(String numFloat, int dif)
+    {
+
+        String decimals= numFloat.substring(numFloat.indexOf(".")+1,numFloat.length());
+        int cant= decimals.length();
+        StringBuffer result;
+        if(cant>0)
+        {
+            if(dif<0)
+                                result=new StringBuffer("-0.");
+            else
+                result=new StringBuffer("0.");
+            for(int i=1; i<cant;i++)
+            {
+                                result.append("0");
+                                writeFormat=writeFormat+"#";
+            }
+            if(dif == 0)
+                result.append("0");
+            else
+                result.append("1");
+            Logger.getLogger(this.getClass()).debug(result.toString());
+            return Float.parseFloat(result.toString());
+        }
+        else
+        {
+            if(dif<0)
+                                return -1f;
+            else
+                return 1f;
+        }
+    }
+}
+
+PARSER_END(EuropeanParserTiny)
+
+SKIP  : {" "| "\t"| "\n"| "\r"| "\f" | "\r\n" }
+
+TOKEN:
+{
+	<COMA:",">
+}
+TOKEN:
+{
+	<BRACKETOPEN:"[">
+}
+TOKEN:
+{
+	<BRACKETCLOSE:"]">
+}
+TOKEN:
+{
+	<INTEGER: (<DIGIT>)+ | <MILES> >
+	|
+	<#MILES: <DIGIT><PARTMIL> | (<DIGIT><DIGIT>)<PARTMIL> | (<DIGIT><DIGIT><DIGIT>)<PARTMIL> >
+	|
+	<#PARTMIL: (<POINT> (<DIGIT><DIGIT><DIGIT>))+>
+	|
+	<#DIGIT: ["0"-"9"]>
+	|
+	<#POINT: ".">
+}
+
+TOKEN: {<Variable: "$">}
+TOKEN: {<STRINGS: ~[]>}
+//TOKEN: {<STRINGS: (["a"-"z","A"-"Z","0"-"9"," ","-","_"])*>}
+ void start():
+  {
+                intervalValues= new Vector();
+  }
+  {
+    formalPolicy()
+    <EOF>
+  }
+
+ void formalPolicy():
+  {}
+  {
+ 
+    content()
+
+  }
+
+
+void content():
+ {}
+ {
+    mathInval()
+  }
+
+void mathInval():
+{
+        String firstBracket;
+        String secondBracket;
+        String operLogic="";
+        String number;
+        Token t;
+        String var;
+}
+{
+    firstBracket = brackets()
+  
+
+      
+    (t =<INTEGER>
+    {
+                number=t.image;
+                if(firstBracket.equals("["))
+                        operLogic=">=";
+                else
+                        operLogic=">";
+                intervalValues.addElement(calculateValueOfRange(operLogic,number));
+    }
+    | var = variables(){
+    	number=var;
+                if(firstBracket.equals("["))
+                        operLogic=">=";
+                else
+                        operLogic=">";
+                intervalValues.addElement(calculateValueOfRange(operLogic,number));
+    })
+
+    <COMA>
+
+    
+    (t = <INTEGER>
+    {
+                number=t.image;
+    }
+    | var = variables(){
+    			number = var;
+    })
+    
+    secondBracket = brackets()
+    {
+                if(secondBracket.equals("]"))
+                        operLogic="<=";
+                else
+                        operLogic="<";
+                intervalValues.addElement(calculateValueOfRange(operLogic,number));
+    }
+  }
+String brackets():
+ {
+        Token t;
+ }
+ { 
+ 	(t = <BRACKETOPEN> | t = <BRACKETCLOSE>)
+ 	{
+ 		return t.image;
+ 	}
+ }
+ 
+String variables():
+{
+	String result;
+	Token t;
+	String temp;
+}
+{
+	t=<Variable>
+	{
+		result = t.image;
+	}
+	t = <STRINGS>
+	temp = text(t.image)
+	{
+		result = result+temp;
+		String tempResult = VariablesManager.returnImplicitExplicitVariable(result,CMApplication.frame.getGridTDStructure().getTDStructure());
+		if(!tempResult.equalsIgnoreCase("")){
+			return tempResult;
+		}	
+		else{
+			return result;
+		}
+	}
+}
+ 
+String text(String string):
+{
+	StringBuffer result=new StringBuffer();
+	Token t;
+}
+{
+	{
+		result.append(string);
+	}
+	(t=<STRINGS>
+		{
+			result.append(t.image);
+		}
+	)*
+	{
+		return result.toString();
+	}	
+} 
+ 
+ 
+ 
+

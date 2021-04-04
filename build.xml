@@ -1,0 +1,327 @@
+<?xml version="1.0"?>
+<!-- edited with XMLSpy v2006 U (http://www.altova.com) by ccastedo (BUSINESS INNOVATIONS) -->
+<project name="CaseMaker" basedir="." default="help">
+	<property name="src.dir" value="src"/>
+	<property name="build.dir" value="build"/>
+	<property name="source.dir" value="src"/>
+	<property name="res.dir" value="res"/>
+	<property name="classes.dir" value="lib"/>
+	<property name="lang.dir" value="lang"/>
+	<property name="tool.dir" value="c:\cmbuildlibs"/>
+	<property name="temp.dir" value="c:\temp\csmkr\"/>
+	<property name="output.dir" value="\\Biproliant1\releases\casemaker_releases"/>
+	<property name="release.dir" value="\\Biproliant1\releases\casemaker_releases"/>
+	<property name="obfuscation.file" value="proconf.pro"/>
+	<taskdef resource="proguard/ant/task.properties" classpath="${tool.dir}\proguard3.5\lib\proguard.jar"/>
+	<path id="classpath">
+		<fileset dir="${classes.dir}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<path id="toolpath">
+		<fileset dir="${tool.dir}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<path id="buildpath">
+		<fileset dir="${output.dir}">
+			<include name="**"/>
+		</fileset>
+	</path>
+	<target name="help">
+		<echo message=""/>
+		<echo message="|||||||Casemaker Build file||||||||"/>
+		<echo message="-----------------------------------"/>
+		<echo message=""/>
+		<echo message="Usage: ant target - All available targets are:"/>
+		<echo message=""/>
+		<echo message="sendjar --&gt; send the jar file to the FTP"/>
+		<echo message="runjar --&gt; try the jar without obfuscation"/>
+		<echo message="makejar --&gt; create a testeable jar file"/>
+		<echo message="Additional options: put these options after the target "/>
+		<echo message="If you want to make a RECOMMENDED REBASE  -Dreb=TRUE "/>
+		<echo message="If you want to UPDATE THE CURRENT VIEW    -Dupd=TRUE "/>
+		<echo message="If you want to INCREASE THE BUILD NUMBER  -Dbuild=TRUE "/>
+		<echo message="If you want to DISABLE THE LICENSE CHECK  -Dlic=TRUE "/>
+	</target>
+	<target name="-init" description="Initialization routines">
+		<loadproperties srcfile="build.number"/>
+		<tstamp>
+			<format property="fecha" pattern="ddMMyyyy"/>
+		</tstamp>
+		<echo message="Initializing globals..."/>
+		<exec executable="cleartool.exe" failonerror="true">
+			<arg value="setact"/>
+			<arg value="${build.act}"/>
+		</exec>
+	</target>
+	<target name="-rebase" description="Make the rebase of the recommended baseline" if="reb">
+		<echo message="Rebasing recommended Baselines..."/>
+		<exec executable="cleartool.exe" failonerror="true">
+			<arg value="rebase"/>
+			<arg value="-view"/>
+			<arg value="${view}"/>
+			<arg value="-recommended"/>
+		</exec>
+		<exec executable="cleartool.exe" failonerror="true">
+			<arg value="rebase"/>
+			<arg value="-view"/>
+			<arg value="${view}"/>
+			<arg value="-complete"/>
+		</exec>
+	</target>
+	<target name="-update" depends="-rebase" description="Update this view" unless="upd">
+		<echo message="Updating the current view..."/>
+		<exec executable="cleartool.exe" failonerror="false">
+			<arg value="update"/>
+		</exec>
+	</target>
+	<target name="compile" description="Compile main source tree java files">
+		<echo message="Compiling the source..."/>
+		<delete dir="${build.dir}"/>
+		<mkdir dir="${build.dir}"/>
+		<javac destdir="${build.dir}" debug="true" deprecation="false" optimize="true" failonerror="true" target="1.5">
+			<src path="${src.dir}"/>
+			<classpath refid="classpath"/>
+		</javac>
+		<copy todir="${build.dir}">
+			<fileset dir="${classes.dir}">
+				<exclude name="**/*.jar"/>
+				<exclude name="**/*.class"/>
+				<exclude name="**/Thumbs.db"/>
+				<exclude name="**/*.map"/>
+				<exclude name="**/*.jj"/>
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<copy todir="${build.dir}">
+			<fileset dir="${src.dir}">
+				<exclude name="**/*.jar"/>
+				<exclude name="**/*.class"/>
+				<exclude name="**/Thumbs.db"/>
+				<exclude name="**/*.map"/>
+				<exclude name="**/*.jj"/>
+				<exclude name="**/*.java"/>
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="-build" description="Increments the build number" unless="build">
+		<exec executable="cleartool.exe" failonerror="false">
+			<arg value="checkout"/>
+			<arg value="-nc"/>
+			<arg value="build.number"/>
+		</exec>
+		<buildnumber/>
+		<exec executable="cleartool.exe" failonerror="false">
+			<arg value="checkin"/>
+			<arg value="-nc"/>
+			<arg value="build.number"/>
+		</exec>
+		<loadproperties srcfile="build.number"/>
+		<tstamp>
+			<format property="fecha" pattern="ddMMyyyy"/>
+		</tstamp>
+		<echo message="Putting build number = ${version}.${fecha}.${build.number} from ${version.old}.${build.date.old}.${build.number.old}"/>
+		<exec executable="cleartool.exe" failonerror="true">
+			<arg value="checkout"/>
+			<arg value="-nc"/>
+			<arg value="${src.dir}/model/BusinessRules.java"/>
+		</exec>
+		<replaceregexp file="${src.dir}/model/BusinessRules.java" byline="true">
+			<regexp pattern="APPLICATIONVERSION = &quot;(.*)&quot;"/>
+			<substitution expression="APPLICATIONVERSION = &quot;${version}&quot;"/>
+		</replaceregexp>
+		<replaceregexp file="${src.dir}/model/BusinessRules.java" byline="true">
+			<regexp pattern="BUILDDATE = &quot;(.*)&quot;"/>
+			<substitution expression="BUILDDATE = &quot;${fecha}&quot;"/>
+		</replaceregexp>
+		<replaceregexp file="${src.dir}/model/BusinessRules.java" byline="true">
+			<regexp pattern="BUILDNUMBER = &quot;(.*)&quot;"/>
+			<substitution expression="BUILDNUMBER = &quot;${build.number} ${version.label}&quot;"/>
+		</replaceregexp>
+		<exec executable="cleartool.exe" failonerror="false">
+			<arg value="checkin"/>
+			<arg value="-nc"/>
+			<arg value="${src.dir}/model/BusinessRules.java"/>
+		</exec>
+	</target>
+	<target name="clean-sources" description="Clean source directories">
+		<delete>
+			<fileset dir="${src.dir}">
+				<include name="**/*.class"/>
+			</fileset>
+		</delete>
+	</target>
+	<target name="makejar" description="Make a executable jar file">
+		<loadproperties srcfile="build.number"/>
+		<tstamp>
+			<format property="fecha" pattern="ddMMyyyy"/>
+		</tstamp>
+		<jar basedir="${build.dir}" destfile="casemaker.jar" excludes="*.jar" compress="false">
+			<manifest>
+				<attribute name="Signature-Version" value="${version}.${fecha}.${build.number} ${version.label}"/>
+				<attribute name="Created-by" value="Business Innovations - Bolivia"/>
+				<attribute name="Main-Class" value="bi.view.mainframeviews.CMApplication"/>
+				<attribute name="Class-Path" value="
+				${classes.dir}/JSX2.2.5.1full.jar   
+				${classes.dir}/smartgrid.jar
+				${classes.dir}/jbcl.jar
+				${classes.dir}/ostermillerutils_1_06_00.jar
+				${classes.dir}/license.jar
+				${classes.dir}/jsr173_1.0_api.jar
+				${classes.dir}/xbean.jar
+				${classes.dir}/log4j-1.2.13.jar
+				${classes.dir}/ReportTCList1.jar
+				${classes.dir}/ReportTCList2.jar
+				${classes.dir}/ReportERList.jar
+				${classes.dir}/ReportDCList1.jar
+				${classes.dir}/wizard.jar
+			    ${classes.dir}/commons-math-1.1.jar
+				${classes.dir}/xrl.jar 
+				${classes.dir}/ReportTDList1.jar
+				${classes.dir}/ReportOldTDList1.jar
+				${classes.dir}/swing-worker-1.1.jar
+				${classes.dir}/jide-common.jar
+				${classes.dir}/jide-grids.jar
+				${classes.dir}/jide-components.jar
+				${classes.dir}/jide-dialogs.jar
+				${classes.dir}/jide-action.jar
+				${classes.dir}/jide-dock.jar
+				${classes.dir}/junit-4.1.jar
+				"/>
+			</manifest>
+		</jar>
+	</target>
+	<target name="runjar" depends="-update,compile" description="run from jar">
+		<loadproperties srcfile="build.number"/>
+		<antcall target="makejar"/>
+		<java jar="casemaker.jar" fork="true"/>
+	</target>
+	<target name="runjarob" depends="-update,compile" description="run from jar">
+		<loadproperties srcfile="build.number"/>
+		<antcall target="makejar"/>
+		<antcall target="-ofuscate"/>
+		<java jar="casemaker.jar" fork="true"/>
+	</target>
+	<target name="-makerar" depends="-passgen" description=" Create the RAR compressed file">
+		<echo message="Makin a Rar file "/>
+		<loadproperties srcfile="build.number"/>
+		<copy todir="${release.dir}" overwrite="true" file="casemaker.jar"/>
+		<delete dir="${release.dir}/Build${build.number}"/>
+		<delete file="${release.dir}/Build${build.number}.rar"/>
+		<mkdir dir="${release.dir}/Build${build.number}"/>
+		<copy todir="${release.dir}/Build${build.number}">
+			<fileset dir="${release.dir}">
+				<include name="casemaker.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${release.dir}/Build${build.number}/res">
+			<fileset dir="${res.dir}">
+				<exclude name="**/*.keep*"/>
+				<exclude name="**/*.contrib*"/>
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<copy todir="${release.dir}/Build${build.number}/src">
+			<fileset dir="${source.dir}">
+				<exclude name="**/*.keep*"/>
+				<exclude name="**/*.contrib*"/>
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<copy todir="${release.dir}/Build${build.number}/lib">
+			<fileset dir="${classes.dir}">
+				<exclude name="license.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${release.dir}/Build${build.number}/lang">
+					<fileset dir="${lang.dir}">
+						<exclude name="**/*.keep*"/>
+						<exclude name="**/*.contrib*"/>
+						<include name="**"/>
+					</fileset>
+				</copy>
+		<exec executable="rar" failonerror="true">
+			<arg value="a"/>
+			<arg value="-r"/>
+			<arg value="-P${password}"/>
+			<arg value="${release.dir}\Build${build.number}.rar"/>
+			<arg value="${release.dir}\Build${build.number}"/>
+		</exec>
+	</target>
+	<target name="sendjar" description="send the Jar file to the FTP server">
+		<loadproperties srcfile="build.number"/>
+		<antcall target="-update"/>
+		<antcall target="-init"/>
+		<antcall target="-build"/>
+		<antcall target="compile"/>
+		<antcall target="makejar"/>
+		<antcall target="-ofuscate"/>
+		<antcall target="-makerar"/>
+		<echo message="Sending file.."/>
+		<ftp verbose="yes" server="ftp.business-innovations.biz" remotedir="files/projects/casemaker/releases" userid="web37" password="SbiT2fAx12ip">
+			<fileset dir="${release.dir}">
+				<include name="Build${build.number}.rar"/>
+			</fileset>
+		</ftp>
+		<antcall target="-mkBaseline"/>
+	</target>
+	<target name="-mkBaseline">
+		<loadproperties srcfile="build.number"/>
+		<tstamp>
+			<format property="fecha" pattern="ddMMyyyy"/>
+		</tstamp>
+		<exec executable="cleartool.exe" failonerror="true">
+			<arg value="mkbl"/>
+			<arg value="-c"/>
+			<arg value="Automatic Baseline build ${build.number}"/>
+			<arg value="-fu"/>
+			<arg value="${version}${fecha}${build.number}"/>
+		</exec>
+	</target>
+	<target name="sendalljars" depends="makejar" description="send all the Jar files to the FTP server">
+		<echo message="Sending files .... please wait"/>
+		<ftp verbose="yes" server="ftp.business-innovations.biz" remotedir="projects/casemaker/releases" userid="web37" password="mPHTqlmz">
+			<fileset dir="${release.dir}">
+				<include name="*.jar"/>
+				<include name="res/*.*"/>
+			</fileset>
+		</ftp>
+		<exec executable="cleartool.exe" failonerror="true">
+			<arg value="mkbl"/>
+			<arg value="-c"/>
+			<arg value="Automatic Baseline build ${build.number}"/>
+			<arg value="-fu"/>
+			<arg value="${version}${fecha}${build.number}"/>
+		</exec>
+	</target>
+	<target name="-passgen">
+		<java classpath="${tool.dir}/ostermillerutils.jar" classname="com.Ostermiller.util.RandPass" output="pass" outputproperty="password" failonerror="true">
+			<arg value="-l"/>
+			<arg value="30"/>
+		</java>
+		<echo message="New password generated ${password}"/>
+	</target>
+	<target name="-ofuscate" description="ofuscate the files with Proguard">
+		<move file="casemaker.jar" tofile="casemakerclear.jar"/>
+		<proguard configuration="${obfuscation.file}"/>
+		<delete file="casemakerclear.jar"/>
+	</target>
+	<target name="confTest">
+		<exec executable="rar" failonerror="true">
+					</exec>
+		<echo> RAR CONFIGURATION OK </echo>
+		<java classpath="${tool.dir}/ostermillerutils.jar" classname="com.Ostermiller.util.RandPass" output="pass" outputproperty="password" failonerror="true">
+			<arg value="-l"/>
+			<arg value="30"/>
+		</java>
+		<echo> PASSWORD CONFIGURATION OK </echo>
+		<ftp verbose="yes" server="192.168.10.71" userid="biuser" password="biclave">
+			<fileset dir="/">
+				<include name="pass"/>
+			</fileset>
+		</ftp>
+		<echo> FTP CONFIGURATION OK </echo>
+	</target>
+</project>

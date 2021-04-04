@@ -1,0 +1,1445 @@
+
+PARSER_BEGIN(EnglishParser)
+package bi.controller.brparser.english;
+
+import bi.view.utils.*;
+import bi.controller.BRParserDataManager;
+import java.lang.StringBuffer;
+import java.util.Vector;
+import java.util.Date;
+import model.brmodel.BusinessAction;
+import model.brmodel.BusinessObject;
+import model.brmodel.FormalPolicy;
+import model.brmodel.InferenceRule;
+import model.brmodel.RelationalPair;
+import model.brmodel.PosRelationalPair;
+import model.brmodel.BooleanBlock;
+import model.brmodel.OrBlock;
+import model.brmodel.AndBlock;
+import model.State;
+import model.brimport.*;
+
+
+
+public class EnglishParser {
+	private static boolean check = true;
+	private static boolean  negativeBA=false;
+	private static int deep=0;
+	private static int negativeDeep=0;
+	private static FormalPolicy m_FormalPolicy;
+	private static BRParserDataManager m_DataManager= new BRParserDataManager();
+	private static BRDocument doc;
+
+	public static void setCheck(boolean value){
+		check = value;
+	}
+
+
+	public static FormalPolicy getM_FormalPolicy(){
+            return m_FormalPolicy;
+      }
+
+	public static BRParserDataManager getM_DataManager(){
+		return m_DataManager;
+	}
+
+
+
+
+}
+
+
+PARSER_END(EnglishParser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+
+}
+
+/* COMMENTS */
+
+MORE :
+{
+  "//" : IN_SINGLE_LINE_COMMENT
+|
+  "/*" : IN_MULTI_LINE_COMMENT
+}
+
+<IN_SINGLE_LINE_COMMENT>
+SPECIAL_TOKEN :
+{
+  <SINGLE_LINE_COMMENT: "\n" | "\r" | "\r\n" > : DEFAULT
+}
+
+
+<IN_MULTI_LINE_COMMENT>
+SPECIAL_TOKEN :
+{
+  <MULTI_LINE_COMMENT: "*/" > : DEFAULT
+}
+
+<IN_SINGLE_LINE_COMMENT,IN_MULTI_LINE_COMMENT>
+MORE :
+{
+  < ~[] >
+}
+
+
+/*DEFAULT TOKENS*/
+
+TOKEN :
+{
+
+
+	< IF: "IF">
+|
+	< ENDIF: "ENDIF">
+|
+	< THEN: "THEN">
+|
+	< ELSE: "ELSE">
+|
+	< AND: "AND">
+|
+	< OR: "OR">
+|
+	< NOT: "NOT">	
+|
+    <WITH: "WITH">
+|
+	<RESULT: "RESULT">
+|
+	<NATIVE:"NATIVE">
+|
+	<REQUIREMENTS : "REQUIREMENTS">
+|
+	<IS_ANY_OF:"IS ANY OF">
+|
+	<IS_NOT_ANY_OF:"IS NOT ANY OF">
+|
+	< FORBIDDEN: "o"["t","T"]["h","H"]["e","E"]["r","R"](["s","S"])?>
+|
+	< NUM: ("-")?((["0"-"9"](["0"-"9"])*("."(["0"-"9"])+)?))>
+|
+	< IS_ATT: "IS AN ATTRIBUTE OF">
+|
+	< ARE_ATT: "ARE ATTRIBUTES OF">
+|
+	< BUSINESS_ACTION_TAG: "BUSINESS ACTION" |"POSITIVE BUSINESS ACTION" | "NEGATIVE BUSINESS ACTION" |"IRRELEVANT BUSINESS ACTION" | "FAULTY BUSINESS ACTION">
+|
+	<NO_BUSINESS_ACTION_TAG: "NO BUSINESS ACTION">
+|
+	< ACTION_BLOCK: "{"    (~["{","}"])+  "}">
+|
+	< VALUE_EXPRESSION: "\"" (~["\""])+  "\"">
+|
+	< IS: "IS " ("A"|"AN")>
+|
+	< COMPOSED_OF: "IS COMPOSED OF">
+|
+	< MAY_BE: "MAY BE">
+|
+	< MAY_BE_THE: "MAY BE THE">
+|
+	< BY: "BY">
+|
+	<RISKLEVEL: "RISK LEVEL">
+|
+	< ID: ["a"-"z","A"-"Z"]( ["a"-"z","A"-"Z","0"-"9","_"] )* >
+|
+	< DOT: ".">
+|
+	<RISKLEVEL_EXPRESSION: "\""["0"-"9"]| "10" "\"">
+|
+	<NATIVE_CONTENT:"[" (~["[","]"])+"]">	            
+}
+
+
+
+
+
+void start() :
+{}
+{
+	{
+		m_FormalPolicy=m_DataManager.createFormalPolicy();
+		doc = new BRDocument();
+	}
+	formalPolicy()<EOF>
+
+ }
+
+void formalPolicy():
+{}
+{
+
+
+	(formalRuleStatement())+
+
+
+}
+
+
+void formalRuleStatement():
+{}
+{
+
+
+	(derivationRule() | otherRules())
+
+}
+
+void derivationRule():
+{InferenceRule theRule=null;}
+{
+	{
+		negativeBA=false;
+		deep=0;
+		negativeDeep=1;
+	}
+	theRule=inferenceRule()
+	{
+		if(!check){
+			m_DataManager.addInferenceRule(m_FormalPolicy,theRule);
+
+		}
+	}
+
+}
+
+InferenceRule inferenceRule():
+{OrBlock booleanStructure=null;
+InferenceRule thisRule=null;
+}
+{
+	{
+		deep++;
+	}
+	booleanStructure=conditionExpression() thisRule=actionAssertion(booleanStructure)
+	{
+		{
+			deep--;
+			if(deep<= negativeDeep){
+				negativeDeep=0;
+				negativeBA= false;
+			}
+		}
+		if(!check){
+			return thisRule;
+		}
+		else{
+			return null;
+		}
+	}
+}
+
+
+OrBlock conditionExpression():
+{//OrBlock booleanStructure=null; //cc
+OrBlock incoming = null;
+}	
+{
+//ccastedo begins 30.05.07	
+//	<IF> "("booleanStructure=booleanExpression() ")"
+//	{
+//		if(!check){
+//			m_DataManager.resolveSameElementInExpression(booleanStructure);
+//		}
+//		return booleanStructure;
+//	}
+//ccastedo ends 30.05.07
+	LOOKAHEAD(<IF><NOT>)
+	 incoming =isIfNotExpression()
+	 {return incoming;}
+	|
+	LOOKAHEAD(<IF>)
+	 incoming =isIfExpression()
+	 {return incoming;}
+	
+	
+	
+}
+
+OrBlock isIfExpression():
+{OrBlock booleanStructure=null;
+Token t;
+}	
+{
+	
+	t=<IF> "("booleanStructure=booleanExpression("") ")"
+	{
+		if(!check){
+			m_DataManager.resolveSameElementInExpression(booleanStructure);
+		}
+		return booleanStructure;
+	}
+}
+//ccastedo begins 30.05.07
+OrBlock isIfNotExpression():
+{OrBlock booleanStructure=null;
+Token t;
+}	
+{
+	
+	t=<IF><NOT> "("booleanStructure=booleanExpression("IF NOT") ")"
+	{
+		if(!check){
+			m_DataManager.resolveSameElementInExpression(booleanStructure);
+		}
+		return booleanStructure;
+	}
+}
+//ccastedo ends 30.05.07
+OrBlock booleanExpression(String t):
+{
+Object incoming;
+OrBlock orBlock;
+
+}
+{	
+	incoming = oper(t){orBlock = new OrBlock(incoming);}
+	( <OR> incoming = oper(t) {orBlock.addIncoming(incoming);}  )*  
+	{
+		return orBlock;
+	}
+
+}
+
+Object oper(String t):
+{
+Object incoming;
+AndBlock andBlock;
+boolean blockCreated = false;
+}
+{
+
+	incoming = fact(t){andBlock = new AndBlock(incoming);}
+	( <AND> incoming = fact(t)
+	{
+		andBlock.addIncoming(incoming);
+		blockCreated = true;
+	}
+	  )*
+	{
+		if(blockCreated){
+			return (Object)andBlock;
+		}
+		else{
+			return incoming;
+		}
+	}
+}
+
+Object fact(String t):
+{
+ PosRelationalPair pair;
+ Object incoming;
+}
+{	
+	LOOKAHEAD((subject() | nativeSubject()| quoteSubject())<IS_ANY_OF>)
+	 incoming =isAnyOfExpression()
+	 {return incoming;}
+	|
+	LOOKAHEAD((subject() | nativeSubject()| quoteSubject())<IS_NOT_ANY_OF>)
+	 incoming =isNotAnyOfExpression()
+	 {return incoming;}
+	
+	|	
+	//ccastedo begins 30.05.07 
+	LOOKAHEAD (<NOT>(subject() | nativeSubject()| quoteSubject())<IS_ANY_OF>)
+	 incoming =isAnyOfExpressionNOT()
+	 {return incoming;}
+	|
+	LOOKAHEAD (<NOT>(subject() | nativeSubject()| quoteSubject())<IS_NOT_ANY_OF>)
+	 incoming =isNotAnyOfExpressionNOT()
+	 {return incoming;}
+	//ccastedo ends 30.05.07
+	|
+	 (pair=relationalExpression(t)
+	 {return pair;}
+	|
+	 "(" incoming = booleanExpression()")"
+	 "(" incoming = booleanExpression(t)")" 
+	 {return incoming;})
+}
+
+
+PosRelationalPair relationalExpression(String t):
+{BusinessObject expressionSubject=null;
+String subjectName="";
+String operator="";
+String value="";
+String n="";
+PosRelationalPair pair=null;
+}
+{	
+	(subjectName=subject()
+	{
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromChain(m_FormalPolicy,null,subjectName);
+		}
+	}
+	| subjectName=nativeSubject(){
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,subjectName);
+		}
+	   }
+	   
+	| subjectName=quoteSubject(){
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,subjectName);
+		}
+	   }
+	//ccastedo begins 31.05.07
+	| <NOT>
+				{n="not";}
+				(				
+				subjectName=subject()
+				{
+					if(!check){
+						expressionSubject=m_DataManager.insertObjectsFromChain(m_FormalPolicy,null,subjectName);
+					}
+				}
+				| subjectName=nativeSubject(){
+					if(!check){
+						expressionSubject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,subjectName);
+					}
+				   }
+				   
+				| subjectName=quoteSubject(){
+					if(!check){
+						expressionSubject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,subjectName);
+					}
+				   }		
+		        )	   
+		//ccastedo ends 31.05.07
+	)
+	operator=relationalOperator(n,t) value=businessValue()
+	{	
+//ccastedo begins 01.06.07
+//		if(value.matches("[Oo][tT][hH][eE][rR]([sS])?")){
+//					throw new ParseException(CMMessages.getString("MESSAGE_OTHER_USED_WRONG")); 
+//		}
+//ccastedo ends 01.06.07
+					m_DataManager.assignValue(expressionSubject,(operator+' '+value));
+				else
+					m_DataManager.assignValue(expressionSubject,(value));
+
+
+		}
+			if(!operator.equals("="))
+				return new PosRelationalPair(expressionSubject,(operator+' '+value));
+			else
+				return new PosRelationalPair(expressionSubject,(value));
+	}
+
+}
+
+String subject():
+{Token dot;
+String object;
+StringBuffer allObjects=new StringBuffer();
+}
+{
+
+	object=businessObject() {allObjects.append(object);}
+	(<DOT>{allObjects.append(".");} object=businessObject(){allObjects.append(object);})*
+
+	{//System.out.println(allObjects.toString());
+	return allObjects.toString();
+	}
+
+}
+String nativeSubject():
+{
+	Token t;
+	String result;
+}
+{			<NATIVE>
+			t=<NATIVE_CONTENT>
+			{
+				result=t.image;
+				result=result.substring(1,result.length()-1);
+				result=result.trim();
+				return result;
+			}
+}
+//ccastedo begins
+String quoteSubject():
+{
+	Token t;
+	String result;
+}
+{			
+			
+			t=<VALUE_EXPRESSION>
+			{
+				result=t.image;
+				result=result.substring(1,result.length()-1);
+				result=result.trim();				
+				return result;				
+			}
+			
+}
+//ccastedo ends
+
+String businessObject():
+{Token t;}
+{
+
+	t=<ID>
+	{return t.image;}	
+}
+
+String businessRole():
+{Token t;}
+{
+
+	t=<ID>
+	{return t.image;}
+
+}
+
+
+String businessValue():
+{String valueObjectChain="";
+BusinessObject valueObject=null;
+String value="";
+Token t;
+}
+{
+
+	((valueObjectChain=subject()
+	{
+		if(!check){
+			valueObject=m_DataManager.insertObjectsFromChain(m_FormalPolicy,null,valueObjectChain);
+		}
+		return valueObjectChain;
+	}
+	| valueObjectChain=nativeSubject(){
+		if(!check){
+			valueObject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,valueObjectChain);
+		}
+		return valueObjectChain;}	
+	)		
+	|t=<VALUE_EXPRESSION>
+	{
+		value=t.image;
+		return value.substring(1,(value.length()-1));
+	}
+	|t=<NUM>//<RISKLEVEL_EXPRESSION>
+	{
+		value=t.image;
+		return value;//.substring(1,(value.length()-1));
+	}
+	)
+
+}
+
+
+String relationalOperator(String n,String t):
+{	
+	String value="";
+	
+}
+{
+	{			
+			value = t;	
+	}
+	(
+		("!=")
+		{
+			if(((value == "")&&(n == ""))||((value == "IF NOT")&&(n == "not")))				
+				return "!=";
+			else
+				if ((value == "IF NOT")||(n == "not"))
+					return "=";
+		} 
+		| ("=")
+		{
+			if(((value == "")&&(n == ""))||((value == "IF NOT")&&(n == "not")))				
+				return  "=" ;
+			else
+				if ((value == "IF NOT")||(n == "not"))
+					return "!=";
+		} 
+		
+		| ("<")
+		{
+			if(((value == "")&&(n == ""))||((value == "IF NOT")&&(n == "not")))	
+				return "<";
+			else
+				if ((value == "IF NOT")||(n == "not"))
+					return ">";
+		} 
+		
+		| (">")
+		{
+			if(((value == "")&&(n == ""))||((value == "IF NOT")&&(n == "not")))
+				return ">";
+			else
+				if ((value == "IF NOT")||(n == "not"))
+					return "<";
+		} 
+		
+		| ("<=")
+		{
+			if(((value == "")&&(n == ""))||((value == "IF NOT")&&(n == "not")))
+				return "<=";
+			else
+				if ((value == "IF NOT")||(n == "not"))
+					return ">=";
+		} 
+		
+		| (">=")
+		{
+			if(((value == "")&&(n == ""))||((value == "IF NOT")&&(n == "not")))
+				return ">=";
+			else
+				if ((value == "IF NOT")||(n == "not"))
+					return "<=";
+		}
+		
+	)
+		
+		
+	
+}
+
+
+InferenceRule actionAssertion(OrBlock booleanStructure):
+{InferenceRule thisRule=null;
+Object truePart=null;
+Object falsePart=null;
+Object truePart2=null;
+Object falsePart2=null;
+InferenceRule thisRule2=null;
+
+}
+{
+
+	<THEN> (truePart=businessAction()(truePart2=inferenceRule())?|truePart=inferenceRule())  ({deep--;}<ELSE>(falsePart=businessAction()(falsePart2=inferenceRule())?|falsePart=inferenceRule()){deep++;})?  <ENDIF>
+	{
+		if(!check){
+			if(truePart2 != null && falsePart2!= null){
+				thisRule = m_DataManager.createInferenceRule(truePart2,falsePart2,booleanStructure);
+				thisRule2=m_DataManager.createInferenceRule(truePart,falsePart,booleanStructure);
+				 m_DataManager.addInferenceRule(m_FormalPolicy,thisRule2);
+			}
+			else if(truePart2 != null){
+				thisRule = m_DataManager.createInferenceRule(truePart2,falsePart,booleanStructure);
+				thisRule2=m_DataManager.createInferenceRule(truePart,falsePart2,booleanStructure);
+				m_DataManager.addInferenceRule(m_FormalPolicy,thisRule2);
+			}
+			else if(falsePart2 != null){
+				thisRule = m_DataManager.createInferenceRule(truePart,falsePart2,booleanStructure);
+				thisRule2=m_DataManager.createInferenceRule(new Vector(),falsePart,booleanStructure);
+				m_DataManager.addInferenceRule(m_FormalPolicy,thisRule2);
+			}
+			else{
+				thisRule = m_DataManager.createInferenceRule(truePart,falsePart,booleanStructure);
+			}
+			return thisRule;
+		}
+	}
+
+	{return null;}
+
+}
+
+Object businessAction():
+{Token t;
+	Token stateAction;
+	int riskLevelAction=0;
+String s=null;
+String finalString=null;
+BusinessAction bAction=null;
+Vector allBusinessActions= new Vector();
+boolean looked=false;
+}
+{
+
+	(
+	stateAction=<BUSINESS_ACTION_TAG>
+	t=<ACTION_BLOCK>
+	(complementaryBusinessActionExpresions(t.image,allBusinessActions))?
+	{
+		if(!check){
+			int state=m_DataManager.getStateForBusinessAction(stateAction.image);
+			s=t.image;
+			s=s.substring(1,s.length()-1);
+			s=s.trim();
+			s=s.replaceAll("[ \t]*\n+[ \t]*","\n");
+			bAction=m_DataManager.getBusinessActionByDescription(m_FormalPolicy,s);
+			if(bAction==null){
+				bAction=m_DataManager.createAndAddBusinessAction(m_FormalPolicy,s);
+				if(state != -1)
+					m_DataManager.addStateToBusinessAction(bAction,state);
+			}
+			else{
+				if(state != -1)
+					m_DataManager.changeStateToBusinessAction(bAction,state);
+			}
+			if(!allBusinessActions.contains(bAction))
+				allBusinessActions.addElement(bAction);
+		}
+		else{
+			int state=m_DataManager.getStateForBusinessAction(stateAction.image);
+			if (state !=State.POSITIVE.intValue() && state != -1){
+				if(negativeBA){
+					looked=true;
+				}
+				else{
+					negativeBA= true;
+					negativeDeep= deep;
+				}
+			}
+			else{
+				if(!looked && deep> negativeDeep && negativeBA){
+					TokenMgrError e=new TokenMgrError(CMMessages.getString("BR_MESSAGE_POSITIVE_BA_AFTER_NEGATIVE_BA"), TokenMgrError.LEXICAL_ERROR);
+					e.m_ErrorLine=t.beginLine;
+					throw 	e;
+				}
+			}
+		}
+
+	}
+	)+
+	{
+		return allBusinessActions;
+	}
+	|
+
+	t=<NO_BUSINESS_ACTION_TAG>
+	{
+		if(!check){
+			return allBusinessActions;
+		}
+		return t.image;
+	}
+}
+
+void otherRules():
+{String bObject;}
+{
+
+	bObject=businessObject() (structuralAssertionRule(bObject)|mathematicalCalculationRule(bObject))
+
+}
+
+void mathematicalCalculationRule(String firstObject):
+{StringBuffer ruleSubject=new StringBuffer();
+String subjectsTail="";
+String expression="";
+}
+{
+	{
+		if(!check){
+
+			ruleSubject.append(firstObject);
+		}
+	}
+
+	(<DOT>subjectsTail=subject()
+	{
+		if(!check){
+			ruleSubject.append("."+subjectsTail);
+		}
+	}	
+	)?	
+	{
+		if(!check){
+			m_DataManager.addMathematicalCalculationRule(m_FormalPolicy,ruleSubject.toString(),expression);			
+		}
+	}
+
+
+}
+
+String mathematicalExpression():
+{String s="";
+StringBuffer buf=new StringBuffer();
+}
+{
+
+	s=operand()
+	{
+		if(!check){
+			buf.append(s);
+		}
+	}
+	( ("+"
+	{
+		if(!check){
+			buf.append("+");
+		}
+	}
+	|"-"
+	{
+		if(!check){
+			buf.append("-");
+		}
+	}
+	) s=mathematicalExpression()
+		{
+		if(!check){
+			buf.append(s);
+		}
+	}
+	)?
+
+	{return buf.toString();}
+
+}
+
+String operand():
+{String s="";
+StringBuffer buf=new StringBuffer();
+}
+{
+
+	s=factor()
+	{
+		if(!check){
+			buf.append(s);
+		}
+	}
+	( ("*"
+	{
+		if(!check){
+			buf.append("*");
+		}
+	}
+	|"/"
+	{
+		if(!check){
+			buf.append("/");
+		}
+	}
+
+	) s=operand()
+	{
+		if(!check){
+			buf.append(s);
+		}
+	}
+
+	)?
+	{return buf.toString();}
+
+}
+
+String factor():
+{String s="";
+StringBuffer buf=new StringBuffer();
+Token t;
+String value="";
+BusinessObject expressionSubject=null;
+}
+{
+
+	(  ("("
+	{
+		if(!check){
+			buf.append("(");
+		}
+	}
+
+	s=mathematicalExpression()
+	{
+		if(!check){
+			buf.append(s);
+		}
+	}
+
+	")"
+	{
+		if(!check){
+			buf.append(")");
+			return buf.toString();
+		}
+		return s;
+	}
+
+	) | s=subject()
+	{
+		if(!check){
+			expressionSubject = m_DataManager.insertObjectsFromChain(m_FormalPolicy,null,s);
+		}
+		return s;
+	}	
+	| t=<VALUE_EXPRESSION>
+	{		
+			value=t.image;			
+			return value.substring(1,(value.length()-1));	
+	}	
+	 |t=<NUM>
+	{
+		value=t.image;
+		return t.image;}
+	)	
+}
+
+void structuralAssertionRule(String firstObject):
+{}
+{
+
+	factRule(firstObject)
+
+}
+
+void factRule(String firstObject):
+{}
+{
+
+	(attributeFactRule(firstObject)|generalizationFactRule(firstObject)|participationFactRule(firstObject))
+
+}
+
+void attributeFactRule(String firstAttribute):
+{Vector attributes=new Vector();
+String attributeOwnerChain="";
+String otherAttribute="";
+BusinessObject attributeOwner=null;
+BusinessObject attribute=null;
+}
+{
+
+	( (<IS_ATT> attributeOwnerChain=subject()
+	{
+		if(!check){
+			attributeOwner=m_DataManager.insertObjectsFromChain(m_FormalPolicy,null,attributeOwnerChain);
+			attribute=m_DataManager.insertObjectsFromChain(m_FormalPolicy,attributeOwner,firstAttribute);
+			m_DataManager.createAttributeFactRule(m_FormalPolicy,attributeOwner,attribute);
+
+		}
+	}
+	)|(
+	{
+		if(!check){
+			attributes.addElement(firstAttribute);
+		}
+	}
+	("," otherAttribute=businessObject()
+	{
+		if(!check){
+			attributes.addElement(otherAttribute);
+		}
+	}
+	)+<ARE_ATT> attributeOwnerChain=subject()
+	{
+		if(!check){
+			attributeOwner=m_DataManager.insertObjectsFromChain(m_FormalPolicy,null,attributeOwnerChain);
+			m_DataManager.addAttributesToBusinessObject(m_FormalPolicy,attributeOwner,attributes);
+			m_DataManager.createAttributeFactRule(m_FormalPolicy,attributeOwner,attributes);
+		}
+	}
+	) )
+
+}
+
+void generalizationFactRule(String subClass):
+{String superClass=null;}
+{
+
+	<IS> superClass=businessObject()
+	{
+		if(!check){
+			m_DataManager.createGeneralizationFactRule(m_FormalPolicy,subClass,superClass);
+		}
+	}
+
+}
+
+void participationFactRule(String firstObject):
+{}
+{
+
+	(associationFactRule(firstObject)|aggregationFactRule(firstObject)|roleFactRule(firstObject))
+
+}
+
+void associationFactRule(String firstObject):
+{
+String modifier=null;
+Token t;
+}
+{
+
+	<MAY_BE> t=<ID> <BY> modifier=businessObject()
+	{
+		if(!check){
+			m_DataManager.createAssociationFactRule(m_FormalPolicy,firstObject,t.image,modifier);
+		}
+	}
+
+}
+
+void aggregationFactRule(String firstObject):
+{String actionObject=null;}
+{
+
+	<COMPOSED_OF> actionObject=businessObject()
+	{
+		if(!check){
+			m_DataManager.createAggregationFactRule(m_FormalPolicy,firstObject,actionObject);
+		}
+	}
+}
+
+void roleFactRule(String firstObject):
+{String roleName=null;}
+{
+
+	<MAY_BE_THE> roleName=businessRole()
+	{
+		if(!check){
+			m_DataManager.createRoleFactRule(m_FormalPolicy,firstObject,roleName);
+		}
+	}
+}
+
+int riskLevelExpression():
+{
+	Token t;
+	Token oldToken;
+}
+{
+	oldToken=<RISKLEVEL>("=")t=<VALUE_EXPRESSION>
+	{
+		String onlyNumber= t.image.substring(1,t.image.length()-1);
+		if(m_DataManager.isValidRiskLevelValue(onlyNumber))
+			return Integer.valueOf(onlyNumber);
+		else{
+			int[][] mensage=new int[1][1];
+			mensage[0][0]=31;
+			throw new ParseException(oldToken.next,mensage,tokenImage);
+		}
+	}
+}
+
+Vector requirementExpression():
+{
+	Token t;
+	Token oldToken;
+}
+{
+	oldToken=<REQUIREMENTS>
+	t=<ACTION_BLOCK>
+	{
+		String values= t.image;
+			values=values.substring(1,values.length()-1);
+			values=values.trim();
+			//values=values.replaceAll("[ \t]*\n+[ \t]*","\n");
+		try{
+		Vector organizedValues= m_DataManager.getRequirementFromString(values);
+		return organizedValues;
+		}
+		catch(bi.controller.brparser.requirementsresultparser.ParseException ex){
+			throw new ParseException(oldToken,ex.expectedTokenSequences,ex.tokenImage);
+		}
+	}
+}
+
+Vector resultExpression():
+{
+	Token t;
+	Token oldToken;
+}
+{
+	oldToken=<RESULT>
+	t=<ACTION_BLOCK>
+	{
+		String values= t.image;
+			values=values.substring(1,values.length()-1);
+			values=values.trim();
+			//values=values.replaceAll("[ \t]*\n+[ \t]*","\n");
+		try{
+		Vector organizedValues= m_DataManager.getResultFromString(values);
+		return organizedValues;
+		}
+		catch( bi.controller.brparser.requirementsresultparser.ParseException ex){
+			System.out.println(ex);
+			throw new ParseException(oldToken,ex.expectedTokenSequences,ex.tokenImage);
+		}
+	}
+}
+void complementaryBusinessActionExpresions(String businessAction, Vector allBusinessActions):
+{
+	int risklevelValue=-1;
+	Vector requirementValues= null;
+	Vector resultValues=null;
+	BusinessAction bAction=null;
+}
+{
+	<WITH>
+	((risklevelValue=riskLevelExpression()(riskLevelComplement(businessAction, allBusinessActions))?)|
+	 (requirementValues=requirementExpression()(requirementComplement(businessAction,allBusinessActions))?)|
+	 (resultValues=resultExpression()(resultComplement(businessAction,allBusinessActions))?))
+	 {
+		if(!check){
+			String s=businessAction;
+			s=s.substring(1,s.length()-1);
+			s=s.trim();
+			s=s.replaceAll("[ \t]*\n+[ \t]*","\n");
+			bAction=m_DataManager.getBusinessActionByDescription(m_FormalPolicy,s);
+			if(bAction==null){
+				bAction=m_DataManager.createAndAddBusinessAction(m_FormalPolicy,s);
+				if(risklevelValue!=-1)
+					m_DataManager.addRiskLevelToBusinessAction(bAction,risklevelValue);
+				if(requirementValues!= null)
+					m_DataManager.addRequirementToBusinessAction(bAction,requirementValues);
+				if(resultValues!=null)
+					m_DataManager.addResultToBusinessAction(bAction,resultValues);
+			}
+			else{
+				if(risklevelValue!=-1)
+					m_DataManager.changeRiskLevelToBusinessAction(bAction,risklevelValue);
+				if(requirementValues!= null)
+					m_DataManager.changeRequirementToBusinessAction(bAction,requirementValues);
+				if(resultValues!=null)
+					m_DataManager.changeResultToBusinessAction(bAction,resultValues);
+			}
+			if(!allBusinessActions.contains(bAction))
+				allBusinessActions.addElement(bAction);
+		}
+	 }
+
+}
+
+void riskLevelComplement(String businessAction, Vector allBusinessActions):
+{
+	Vector requirementValues= null;
+	Vector resultValues= null;
+	BusinessAction bAction=null;
+}
+{
+	","(requirementValues=requirementExpression()(","resultValues=resultExpression())?|resultValues=resultExpression()(","requirementValues=requirementExpression())?)
+	{
+		if(!check){
+			String s=businessAction;
+			s=s.substring(1,s.length()-1);
+			s=s.trim();
+			s=s.replaceAll("[ \t]*\n+[ \t]*","\n");
+			bAction=m_DataManager.getBusinessActionByDescription(m_FormalPolicy,s);
+			if(bAction==null){
+				bAction=m_DataManager.createAndAddBusinessAction(m_FormalPolicy,s);
+				if(requirementValues!= null)
+					m_DataManager.addRequirementToBusinessAction(bAction,requirementValues);
+				if(resultValues!=null)
+					m_DataManager.addResultToBusinessAction(bAction,resultValues);
+			}
+			else{
+				if(requirementValues!= null)
+					m_DataManager.changeRequirementToBusinessAction(bAction,requirementValues);
+				if(resultValues!=null)
+					m_DataManager.changeResultToBusinessAction(bAction,resultValues);
+			}
+			if(!allBusinessActions.contains(bAction))
+				allBusinessActions.addElement(bAction);
+		}
+	 }
+}
+
+void requirementComplement(String businessAction,Vector allBusinessActions):
+{
+	int risklevelValue=-1;
+	Vector resultValues= null;
+	BusinessAction bAction=null;
+}
+{
+	","(risklevelValue=riskLevelExpression()(","resultValues=resultExpression())?|resultValues=resultExpression()(","risklevelValue=riskLevelExpression())?)
+{
+		if(!check){
+			String s=businessAction;
+			s=s.substring(1,s.length()-1);
+			s=s.trim();
+			s=s.replaceAll("[ \t]*\n+[ \t]*","\n");
+			bAction=m_DataManager.getBusinessActionByDescription(m_FormalPolicy,s);
+			if(bAction==null){
+				bAction=m_DataManager.createAndAddBusinessAction(m_FormalPolicy,s);
+				if(risklevelValue!=-1)
+					m_DataManager.addRiskLevelToBusinessAction(bAction,risklevelValue);
+				if(resultValues!=null)
+					m_DataManager.addResultToBusinessAction(bAction,resultValues);
+			}
+			else{
+				if(risklevelValue!=-1)
+					m_DataManager.changeRiskLevelToBusinessAction(bAction,risklevelValue);
+				if(resultValues!=null)
+					m_DataManager.changeResultToBusinessAction(bAction,resultValues);
+			}
+			if(!allBusinessActions.contains(bAction))
+				allBusinessActions.addElement(bAction);
+		}
+	 }
+}
+
+void resultComplement(String businessAction, Vector allBusinessActions):
+{
+	int risklevelValue=-1;
+	Vector requirementValues= null;
+	BusinessAction bAction=null;
+}
+{
+	","(risklevelValue=riskLevelExpression()(","requirementValues=requirementExpression())?|requirementValues=requirementExpression()(","risklevelValue=riskLevelExpression())?)
+	{
+		if(!check){
+			String s=businessAction;
+			s=s.substring(1,s.length()-1);
+			s=s.trim();
+			s=s.replaceAll("[ \t]*\n+[ \t]*","\n");
+			bAction=m_DataManager.getBusinessActionByDescription(m_FormalPolicy,s);
+			if(bAction==null){
+				bAction=m_DataManager.createAndAddBusinessAction(m_FormalPolicy,s);
+				if(risklevelValue!=-1)
+					m_DataManager.addRiskLevelToBusinessAction(bAction,risklevelValue);
+				if(requirementValues!= null)
+					m_DataManager.addRequirementToBusinessAction(bAction,requirementValues);
+			}
+			else{
+				if(risklevelValue!=-1)
+					m_DataManager.changeRiskLevelToBusinessAction(bAction,risklevelValue);
+				if(requirementValues!= null)
+					m_DataManager.changeRequirementToBusinessAction(bAction,requirementValues);
+			}
+			if(!allBusinessActions.contains(bAction))
+				allBusinessActions.addElement(bAction);
+		}
+	 }
+}
+
+OrBlock isAnyOfExpression():
+{
+	Object incoming;
+	OrBlock orBlock= null;
+	Vector expressionSubjects= new Vector();
+	String subjectName="";
+	String operator="=";
+	BusinessObject expressionSubject=null;
+}
+{
+   (	subjectName=subject()
+		{
+			if(!check){
+				expressionSubject=m_DataManager.insertObjectsFromChain(m_FormalPolicy,null,subjectName);
+			}
+		}
+	|
+		subjectName=nativeSubject(){
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,subjectName);
+		}
+		}	
+	| 
+		subjectName=quoteSubject(){
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,subjectName);
+		}
+		}
+	)
+  	<IS_ANY_OF>
+  	"(" expressionSubjects=expressionSubjects()")"
+  	{
+  		for(int i=0; i < expressionSubjects.size();i++ ){
+  			String value=(String)expressionSubjects.elementAt(i);
+  			if(!check){
+					m_DataManager.assignValue(expressionSubject,value);
+			}
+			incoming=new PosRelationalPair(expressionSubject,value);
+			if(orBlock == null){
+				orBlock = new OrBlock(incoming);
+			}
+			else{
+				orBlock.addIncoming(incoming);
+			}
+  	}
+  	return orBlock;
+  }
+}
+//ccastedo begins 31.05.07
+OrBlock isNotAnyOfExpressionNOT():
+{
+	Object incoming;
+	OrBlock orBlock= null;
+	Vector expressionSubjects= new Vector();
+	String subjectName="";
+	String operator="=";
+	BusinessObject expressionSubject=null;
+}
+{
+   <NOT>
+   (	subjectName=subject()
+		{
+			if(!check){
+				expressionSubject=m_DataManager.insertObjectsFromChain(m_FormalPolicy,null,subjectName);
+			}
+		}
+	| 
+		subjectName=nativeSubject(){
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,subjectName);
+		}
+		}	
+	| 
+		subjectName=quoteSubject(){
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,subjectName);
+		}
+		}
+	)
+  	<IS_NOT_ANY_OF>
+  	"(" expressionSubjects=expressionSubjects()")"
+  	{
+  		for(int i=0; i < expressionSubjects.size();i++ ){
+  			String value=(String)expressionSubjects.elementAt(i);
+  			if(!check){
+					m_DataManager.assignValue(expressionSubject,value);
+			}
+			incoming=new PosRelationalPair(expressionSubject,value);
+			if(orBlock == null){
+				orBlock = new OrBlock(incoming);
+			}
+			else{
+				orBlock.addIncoming(incoming);
+			}
+  	}
+  	return orBlock;
+  }
+}
+//ccastedo ends 31.05.07
+
+Vector expressionSubjects():
+{
+	Vector values= new Vector();
+	String value="";
+}
+{
+	(value=businessValue()
+	{
+    //ccastedo begins 01.06.07
+	//	if(value.matches("[Oo][tT][hH][eE][rR]([sS])?")){
+	//				throw new ParseException(CMMessages.getString("MESSAGE_OTHER_USED_WRONG"));
+	//	}
+	//ccastedo ends 01.06.07
+
+		values.addElement(value);
+
+	})
+	(","value=businessValue()
+	{
+	//ccastedo begins 01.06.07
+	//	if(value.matches("[Oo][tT][hH][eE][rR]([sS])?")){
+	//				throw new ParseException(CMMessages.getString("MESSAGE_OTHER_USED_WRONG"));
+	//	}
+	//ccastedo ends 01.06.07
+
+		values.addElement(value);
+
+	})*
+	{
+		return values;
+	}
+}
+
+//ccastedo begins 31.05.07
+OrBlock isAnyOfExpressionNOT():
+{
+	Object incoming;
+	OrBlock orBlock= null;
+	Vector expressionSubjects= new Vector();
+	String subjectName="";
+	String operator="!=";
+	BusinessObject expressionSubject=null;
+	StringBuffer value=new StringBuffer();
+}
+{
+  <NOT>
+  (subjectName=subject()
+	{
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromChain(m_FormalPolicy,null,subjectName);
+		}
+	}
+	| subjectName=nativeSubject(){
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,subjectName);
+		}
+	   }
+	| subjectName=quoteSubject(){
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,subjectName);
+		}
+	   }   
+	
+	)
+  <IS_ANY_OF>"(" expressionSubjects=expressionSubjects()")"
+  {
+  	for(int i=0; i < (expressionSubjects.size()-1);i++ ){
+  		value.append(operator);
+  		value.append(expressionSubjects.elementAt(i));
+  		value.append(" AND ");
+  	}
+  	value.append(operator);
+  	value.append(expressionSubjects.lastElement());
+  	if(!check){
+		 m_DataManager.assignValue(expressionSubject,value.toString());
+		}
+		incoming=new PosRelationalPair(expressionSubject,value.toString());
+		orBlock = new OrBlock(incoming);
+  	return orBlock;
+  }
+}
+//ccastedo ends 31.05.07
+
+OrBlock isNotAnyOfExpression():
+{
+	Object incoming;
+	OrBlock orBlock= null;
+	Vector expressionSubjects= new Vector();
+	String subjectName="";
+	String operator="!=";
+	BusinessObject expressionSubject=null;
+	StringBuffer value=new StringBuffer();
+}
+{  
+  (subjectName=subject()
+	{
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromChain(m_FormalPolicy,null,subjectName);
+		}
+	}
+	| subjectName=nativeSubject(){
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,subjectName);
+		}
+	   }
+	| subjectName=quoteSubject(){
+		if(!check){
+			expressionSubject=m_DataManager.insertObjectsFromNative(m_FormalPolicy,subjectName);
+		}
+	   }   
+	
+	)
+  <IS_NOT_ANY_OF>"(" expressionSubjects=expressionSubjects()")"
+  {
+  	for(int i=0; i < (expressionSubjects.size()-1);i++ ){
+  		value.append(operator);
+  		value.append(expressionSubjects.elementAt(i));
+  		value.append(" AND ");
+  	}
+  	value.append(operator);
+  	value.append(expressionSubjects.lastElement());
+  	if(!check){
+		 m_DataManager.assignValue(expressionSubject,value.toString());
+		}
+		incoming=new PosRelationalPair(expressionSubject,value.toString());
+		orBlock = new OrBlock(incoming);
+  	return orBlock;
+  }
+}
+

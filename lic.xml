@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- jsx.org, (c) -->
+<jsx major='1' minor='1' format='JSX.DataReader'>
+ <object id='i0' class='model.License' superclasses=''>
+  <declaredClass class='model.License'>
+   <default>
+    <string field='m_LicenseValue' id='i1' value='CaseMaker_TEAM_29512Gc3bbDEMOhu5g976'/>
+    <string field='m_ClientId' id='i2' value='012301306154961'/>
+    <string field='m_Pd' id='i3' value='21'/>
+   </default>
+  </declaredClass>
+ </object>
+</jsx>

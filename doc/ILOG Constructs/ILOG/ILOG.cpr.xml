@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- jsx.org, (c) -->
+<jsx major='1' minor='1' format='JSX.DataReader'>
+ <object id='i0' class='model.Project2' superclasses=''>
+  <declaredClass class='model.Project2'>
+   <default>
+    <string field='m_Description' id='i1' value=''/>
+    <string field='m_Name' id='i2' value='ILOG'/>
+    <collection field='m_TestObjectReferences' id='i3' class='java.util.Vector'>
+     <object id='i4' class='model.TestObjectReference' superclasses=''>
+      <declaredClass class='model.TestObjectReference'>
+       <default>
+        <string field='m_Name' id='i5' value='Basic Operators'/>
+        <string field='m_FileName' id='i6' value='Basic Operators.cto.xml'/>
+        <string field='m_Path' id='i7' value=''/>
+        <reference field='m_FilePath' idref='i7'/>
+        <reference field='m_ProjectPath' idref='i7'/>
+        <object field='m_Project' id='i8' class='model.Project2' superclasses=''>
+         <declaredClass class='model.Project2'>
+          <default>
+           <string field='m_Description' id='i9' value=''/>
+           <string field='m_Name' id='i10' value='ILOG'/>
+           <reference field='m_TestObjectReferences' idref='i3'/>
+           <object field='m_TimeStamp' id='i11' class='java.util.Date' superclasses=''>
+            <declaredClass class='java.util.Date'>
+             <primitive type='long' value='1173920873234'/>
+            </declaredClass>
+           </object>
+           <object field='m_Variables' id='i12' class='model.Variables' superclasses=''>
+            <declaredClass class='model.Variables'>
+             <default>
+              <null field='m_Project'/>
+              <collection field='value' id='i13' class='java.util.Vector'/>
+              <collection field='names' id='i14' class='java.util.Vector'/>
+              <collection field='description' id='i15' class='java.util.Vector'/>
+              <collection field='type' id='i16' class='java.util.Vector'/>
+              <collection field='format' id='i17' class='java.util.Vector'/>
+              <collection field='formatter' id='i18' class='java.util.Vector'/>
+              <collection field='variables' id='i19' class='java.util.Vector'/>
+             </default>
+            </declaredClass>
+           </object>
+           <string field='m_Version' id='i20' value='1.5'/>
+           <string field='m_AccessState' id='i21' value='Checked out'/>
+           <string field='m_User' id='i22' value='Sergio Moreno'/>
+          </default>
+         </declaredClass>
+        </object>
+        <string field='m_AccessState' id='i23' value='Checked out'/>
+        <string field='m_User' id='i24' value='Guest'/>
+        <object field='m_TimeStamp' id='i25' class='java.util.Date' superclasses=''>
+         <declaredClass class='java.util.Date'>
+          <primitive type='long' value='1173920876250'/>
+         </declaredClass>
+        </object>
+        <reference field='m_ChangedName' idref='i5'/>
+       </default>
+      </declaredClass>
+     </object>
+     <object id='i26' class='model.TestObjectReference' superclasses=''>
+      <declaredClass class='model.TestObjectReference'>
+       <default>
+        <string field='m_Name' id='i27' value='Basic Constructs'/>
+        <string field='m_FileName' id='i28' value='Basic Constructs.cto.xml'/>
+        <string field='m_Path' id='i29' value=''/>
+        <reference field='m_FilePath' idref='i29'/>
+        <reference field='m_ProjectPath' idref='i29'/>
+        <object field='m_Project' id='i30' class='model.Project2' superclasses=''>
+         <declaredClass class='model.Project2'>
+          <default>
+           <string field='m_Description' id='i31' value=''/>
+           <string field='m_Name' id='i32' value='ILOG'/>
+           <reference field='m_TestObjectReferences' idref='i3'/>
+           <reference field='m_TimeStamp' idref='i11'/>
+           <reference field='m_Variables' idref='i12'/>
+           <reference field='m_Version' idref='i20'/>
+           <reference field='m_AccessState' idref='i21'/>
+           <reference field='m_User' idref='i22'/>
+          </default>
+         </declaredClass>
+        </object>
+        <string field='m_AccessState' id='i33' value='Checked out'/>
+        <string field='m_User' id='i34' value='Guest'/>
+        <object field='m_TimeStamp' id='i35' class='java.util.Date' superclasses=''>
+         <declaredClass class='java.util.Date'>
+          <primitive type='long' value='1173921066703'/>
+         </declaredClass>
+        </object>
+        <reference field='m_ChangedName' idref='i27'/>
+       </default>
+      </declaredClass>
+     </object>
+    </collection>
+    <reference field='m_TimeStamp' idref='i11'/>
+    <reference field='m_Variables' idref='i12'/>
+    <reference field='m_Version' idref='i20'/>
+    <reference field='m_AccessState' idref='i21'/>
+    <reference field='m_User' idref='i22'/>
+   </default>
+  </declaredClass>
+ </object>
+</jsx>

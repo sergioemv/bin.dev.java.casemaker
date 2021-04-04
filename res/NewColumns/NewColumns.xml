@@ -1,0 +1,20 @@
+<jsx major='1' minor='1' format='JSX.DataReader'>
+ <object id='i0' class='model.NewColumns'>
+  <declaredClass class='model.NewColumns'>
+   <default>
+    <primitive field='id' type='int' value='-1'/>
+    <string field='m_Name' id='i1' value='NewColumns'/>
+    <string field='m_FilePath' id='i2' value='NewColumns/NewColumns.xml'/>
+    <collection field='m_NewColumns' id='i3' class='java.util.Vector'>
+     <reference idref='i0'/>
+    </collection>
+    <string field='m_Version' id='i4' value='1.5'/>
+    <object field='m_TimeStamp' id='i5' class='java.util.Date'>
+     <declaredClass class='java.util.Date'>
+      <primitive type='long' value='1124734066900'/>
+     </declaredClass>
+    </object>
+   </default>
+  </declaredClass>
+ </object>
+</jsx>

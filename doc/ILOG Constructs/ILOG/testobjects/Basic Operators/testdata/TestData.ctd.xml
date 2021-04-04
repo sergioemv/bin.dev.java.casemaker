@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- jsx.org, (c) -->
+<jsx major='1' minor='1' format='JSX.DataReader'>
+ <object id='i0' class='model.TDStructure' superclasses=''>
+  <declaredClass class='model.TDStructure'>
+   <default>
+    <collection field='m_StructureTestData' id='i1' class='java.util.Vector'/>
+    <object field='m_TimeStamp' id='i2' class='java.util.Date' superclasses=''>
+     <declaredClass class='java.util.Date'>
+      <primitive type='long' value='1173920876250'/>
+     </declaredClass>
+    </object>
+    <string field='m_Name' id='i3' value='TestData'/>
+    <string field='m_Description' id='i4' value=''/>
+    <null field='m_TestObject'/>
+    <primitive field='ids' type='int' value='0'/>
+    <primitive field='idsTestDataSet' type='int' value='0'/>
+    <null field='m_TestObjectReference'/>
+    <collection field='m_TestDataSet' id='i5' class='java.util.Vector'/>
+    <collection field='m_TestCaseInTDStructure' id='i6' class='java.util.Vector'/>
+    <object field='testDataCombination' id='i7' class='model.TestDataCombinations' superclasses=''>
+     <declaredClass class='model.TestDataCombinations'>
+      <default>
+       <collection field='m_TestDatas' id='i8' class='java.util.Vector'/>
+       <primitive field='m_swTargetActual' type='boolean' value='false'/>
+      </default>
+     </declaredClass>
+    </object>
+    <object field='m_ResultComparation' id='i9' class='model.ResultComparation' superclasses=''>
+     <declaredClass class='model.ResultComparation'>
+      <default>
+       <collection field='testDataSetTarget' id='i10' class='java.util.Vector'/>
+       <collection field='testDataSetActual' id='i11' class='java.util.Vector'/>
+      </default>
+     </declaredClass>
+    </object>
+    <primitive field='swActualTarget' type='boolean' value='false'/>
+    <object field='m_TestDataSetReportUnit' id='i12' class='model.TestDataSetReportUnit' superclasses=''>
+     <declaredClass class='model.TestDataSetReportUnit'>
+      <default>
+       <collection field='nameReportsImport' id='i13' class='java.util.Vector'/>
+       <collection field='pathReportsImport' id='i14' class='java.util.Vector'/>
+       <null field='parameterReport'/>
+       <null field='applicationName'/>
+       <null field='reportName'/>
+       <collection field='m_ReportRecords' id='i15' class='java.util.Vector'/>
+       <collection field='m_ImportReportRecords' id='i16' class='java.util.Vector'/>
+      </default>
+     </declaredClass>
+    </object>
+    <string field='m_Version' id='i17' value='1.9'/>
+    <object field='m_Variables' id='i18' class='model.Variables' superclasses=''>
+     <declaredClass class='model.Variables'>
+      <default>
+       <null field='m_Project'/>
+       <collection field='value' id='i19' class='java.util.Vector'/>
+       <collection field='names' id='i20' class='java.util.Vector'/>
+       <collection field='description' id='i21' class='java.util.Vector'/>
+       <collection field='type' id='i22' class='java.util.Vector'/>
+       <collection field='format' id='i23' class='java.util.Vector'/>
+       <collection field='formatter' id='i24' class='java.util.Vector'/>
+       <collection field='variables' id='i25' class='java.util.Vector'/>
+      </default>
+     </declaredClass>
+    </object>
+   </default>
+  </declaredClass>
+ </object>
+</jsx>

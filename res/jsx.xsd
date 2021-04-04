@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:group name="refType">
+		<xsd:choice>
+			<!-- (string|object|null|array|reference|reference) -->
+			<xsd:element ref="string"/>
+			<xsd:element ref="class"/>
+			<xsd:element ref="object"/>
+			<xsd:element ref="null"/>
+			<xsd:element ref="array"/>
+			<xsd:element ref="collection"/>
+			<xsd:element ref="reference"/>
+		</xsd:choice>
+	</xsd:group>
+	<!-- Not needed for XML in general: user called reset() (in ObjectWriter), to clear the reference map. -->
+	<!--
+	<xsd:element name="reset">
+		<xsd:complexType/>
+	</xsd:element>
+-->
+	<xsd:element name="jsx">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<!-- (primitive|refType)* -->
+				<xsd:element ref="primitive"/>
+				<xsd:group ref="refType"/>
+				<!-- <xsd:element ref="reset"/> -->
+			</xsd:choice>
+			<xsd:attribute name="major" type="xsd:string" use="required"/>
+			<xsd:attribute name="minor" type="xsd:string" use="required"/>
+			<xsd:attribute name="format" type="xsd:string" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="collection">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:group ref="refType" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attribute name="field" type="xsd:string"/>
+			<xsd:attribute name="id" type="xsd:ID"/>
+			<xsd:attribute name="class" type="xsd:string" use="required"/>
+			<!-- optional -->
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="array">
+		<xsd:complexType>
+			<xsd:choice>
+				<!-- ( primitive*|refType* ) -->
+				<xsd:element ref="primitive" minOccurs="0" maxOccurs="unbounded"/>
+				<!-- (primitive)* -->
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<!-- (refType)* -->
+					<xsd:group ref="refType"/>
+				</xsd:choice>
+			</xsd:choice>
+			<xsd:attribute name="field" type="xsd:string"/>
+			<xsd:attribute name="id" type="xsd:ID"/>
+			<xsd:attribute name="base" type="xsd:string" use="required"/>
+			<xsd:attribute name="dim" type="xsd:int" use="required"/>
+			<xsd:attribute name="length" type="xsd:int" use="required"/>
+			<!-- optional -->
+			<!-- optional -->
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="reference">
+		<xsd:complexType>
+			<xsd:attribute name="field" type="xsd:string"/>
+			<xsd:attribute name="idref" type="xsd:IDREF" use="required"/>
+			<!-- optional -->
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="null">
+		<xsd:complexType>
+			<xsd:attribute name="field" type="xsd:string"/>
+			<!-- optional -->
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="string">
+		<xsd:complexType>
+			<xsd:attribute name="field" type="xsd:string"/>
+			<xsd:attribute name="id" type="xsd:ID"/>
+			<xsd:attribute name="value" type="xsd:string" use="required"/>
+			<!-- optional -->
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="class">
+		<xsd:complexType>
+			<xsd:attribute name="field" type="xsd:string"/>
+			<xsd:attribute name="class" type="xsd:string" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+	<!-- IDEA: object, declaredClass, default in a single unit -->
+	<xsd:element name="object">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="declaredClass" maxOccurs="unbounded"/>
+				<!-- (declaredClass)+ -->
+			</xsd:sequence>
+			<xsd:attribute name="field" type="xsd:string"/>
+			<xsd:attribute name="id" type="xsd:ID"/>
+			<xsd:attribute name="class" type="xsd:string" use="required"/>
+			<xsd:attribute name="superclasses" type="xsd:string" use="required"/>
+			<!-- optional -->
+			<!-- optional -->
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="declaredClass">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="default" minOccurs="0"/>
+				<!-- (default)? -->
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<!-- this is optional data, after <defualt> -->
+					<xsd:element ref="primitive"/>
+					<xsd:group ref="refType"/>
+				</xsd:choice>
+			</xsd:sequence>
+			<xsd:attribute name="class" type="xsd:string" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="default">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<!-- (primitive|refType)* -->
+				<xsd:element ref="primitive"/>
+				<xsd:group ref="refType"/>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="primitive">
+		<xsd:complexType>
+			<xsd:attribute name="field" type="xsd:string"/>
+			<xsd:attribute name="type" type="xsd:string" use="required"/>
+			<xsd:attribute name="value" type="xsd:string" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>
